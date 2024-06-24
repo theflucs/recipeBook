@@ -1,15 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-
 import { Recipe } from "../types/api";
+import axiosInstance from "../api.ts/axios";
 
 function Home() {
   const { data, error, isLoading } = useQuery<Recipe[], Error>({
     queryKey: ["recipes"],
     queryFn: async () => {
-      const { data } = await axios.get<Recipe[]>(
-        "http://localhost:8080/recipes"
-      );
+      const { data } = await axiosInstance.get<Recipe[]>("/recipes");
       return data;
     },
   });
