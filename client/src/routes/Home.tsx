@@ -1,31 +1,82 @@
-import { useQuery } from "@tanstack/react-query";
 import { Recipe } from "../types/api";
-import axiosInstance from "../api.ts/axios";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getRecipes } from "../api.ts/calls";
 
 function Home() {
-  const { data, error, isLoading } = useQuery<Recipe[], Error>({
+  const {
+    data,
+    fetchNextPage,
+    isFetched,
+    isFetching,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
     queryKey: ["recipes"],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get<Recipe[]>("/recipes");
-      return data;
+    queryFn: async ({ pageParam }) => getRecipes(pageParam),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length <= 0) {
+        return undefined;
+      }
+      return allPages.length + 1;
     },
   });
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching recipes: {error.message}</div>;
+  const handleClick = () => {
+    fetchNextPage();
+  };
 
   return (
-    <section className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-teal-500 text-3xl mb-4">Recipes</h1>
-      <ul className="w-full max-w-lg">
-        {data?.map((recipe) => (
-          <li key={recipe.id} className="py-2 text-center">
-            {recipe.name}
-          </li>
-        ))}
+    <section>
+      <h1>Home</h1>
+      {isError && <p>Error</p>}
+      {isFetching && <p>Loading...</p>}
+      <ul>
+        {isFetched &&
+          data?.pages?.map((page: Recipe[]) =>
+            page.map((recipe: Recipe) => {
+              return (
+                <li key={recipe.id} className="py-2">
+                  {recipe.name}
+                </li>
+              );
+            })
+          )}
       </ul>
+      <div>
+        <button
+          onClick={() => handleClick()}
+          disabled={!hasNextPage || isFetchingNextPage}
+          className={`
+            ${
+              isFetchingNextPage
+                ? "bg-gray-300 cursor-wait"
+                : "bg-orange-500 hover:bg-orange-600 focus:outline-none"
+            }
+            ${
+              hasNextPage
+                ? "py-3 px-6 rounded-full text-white text-lg"
+                : "hidden"
+            }
+          `}
+        >
+          {isFetchingNextPage
+            ? "Loading more..."
+            : hasNextPage
+            ? "Load More"
+            : null}
+        </button>
+        {!hasNextPage && !isFetchingNextPage && (
+          <div className="mt-4">
+            <p className="font-semibold">No more recipes</p>
+          </div>
+        )}
+      </div>
+
+      <div>
+        {isFetching && !isFetchingNextPage ? "Loading more recipes..." : null}
+      </div>
     </section>
   );
 }
-
 export default Home;
