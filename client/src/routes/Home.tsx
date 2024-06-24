@@ -1,17 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-type Recipe = {
-  id: number;
-  name: string;
-  ingredients: string[];
-  instructions: string;
-  cuisineId: number;
-  cuisine: string;
-  difficultyId: number;
-  difficulty: string;
-  image: string;
-};
+import { Recipe } from "../types/api";
 
 function Home() {
   const { data, error, isLoading } = useQuery<Recipe[], Error>({
