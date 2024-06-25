@@ -5,7 +5,7 @@ export type Recipe = {
     instructions: string;
     cuisineId: number;
     cuisine: string;
-    difficultyId: number;
+    difficultyId: string;
     difficulty: string;
     image: string;
 };

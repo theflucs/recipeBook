@@ -32,7 +32,7 @@ function ReceipeDetail() {
             src={`${BASE_API_URL}${image}`}
             alt={name}
           />
-          <DifficultyCardBadge difficultyId={difficultyId.toString()} />
+          <DifficultyCardBadge difficultyId={difficultyId} />
         </div>
         <div>
           <h1 className="text-3xl font-bold mb-4">{name}</h1>
