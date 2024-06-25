@@ -1,8 +1,9 @@
 import { useParams } from "react-router-dom";
-import { getRecipeDetail } from "../api.ts/calls";
+import { getRecipeComments, getRecipeDetail } from "../api.ts/calls";
 import { useQuery } from "@tanstack/react-query";
 import DifficultyCardBadge from "../components/DifficultyBadge";
 import { BASE_API_URL } from "../api.ts/BASE_API_URL";
+import { format, parseISO } from "date-fns";
 
 function ReceipeDetail() {
   const { id } = useParams<{ id: string }>();
@@ -19,7 +20,6 @@ function ReceipeDetail() {
   if (error) {
     return <p>Error loading recipe</p>;
   }
-  console.log(data);
   const { name, image, difficultyId, instructions, ingredients } = data;
 
   return (
@@ -38,7 +38,7 @@ function ReceipeDetail() {
           <h1 className="text-3xl font-bold mb-4">{name}</h1>
           <h2 className="text-xl font-bold mb-2">Ingredients:</h2>
           <ul className="list-disc pl-8">
-            {ingredients.map((ingredient) => (
+            {ingredients?.map((ingredient) => (
               <li key={ingredient}>{ingredient}</li>
             ))}
           </ul>
@@ -47,6 +47,39 @@ function ReceipeDetail() {
           <div className="mt-4"></div>
         </div>
       </div>
+
+      <Comments id={id} />
+    </section>
+  );
+}
+
+function Comments(props: { id: string | undefined }) {
+  const { id } = props;
+
+  const { data, error } = useQuery({
+    queryKey: ["comments", id],
+    queryFn: () => getRecipeComments(id as string),
+  });
+
+  if (!data) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error loading recipe</p>;
+  }
+  return (
+    <section className="max-w-7xl mx-auto py-8">
+      <h2 className="text-xl font-bold mb-4">Comments</h2>
+      {data.map((comment) => (
+        <div className="mb-6 pb-4 border-b" key={comment.id}>
+          <p className="font-bold text-lg mb-2">{comment.comment}</p>
+          <p className="text-gray-500 mb-2">
+            {format(parseISO(comment.date), "dd/MM/yyyy HH:mm")}
+          </p>
+          <p className="text-gray-500 mb-2">Rating: {comment.rating}</p>
+        </div>
+      ))}
     </section>
   );
 }

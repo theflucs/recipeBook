@@ -9,3 +9,11 @@ export type Recipe = {
     difficulty: string;
     image: string;
 };
+
+export type Comment = {
+    id: string;
+    recipeId: string;
+    comment: string;
+    rating: number;
+    date: string;
+};
