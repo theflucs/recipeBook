@@ -17,3 +17,8 @@ export type Comment = {
     rating: number;
     date: string;
 };
+
+export type Option = {
+    id: string;
+    name: string;
+};

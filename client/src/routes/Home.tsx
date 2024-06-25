@@ -1,6 +1,11 @@
-import { Recipe } from "../types/api";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { getRecipes } from "../api.ts/calls";
+import { Option, Recipe } from "../types/api";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import {
+  getCuisines,
+  getDiets,
+  getDifficulties,
+  getRecipes,
+} from "../api.ts/calls";
 import { BASE_API_URL } from "../api.ts/BASE_API_URL";
 import DifficultyCardBadge from "../components/DifficultyBadge";
 import { Link } from "react-router-dom";
@@ -8,6 +13,15 @@ import { useState } from "react";
 
 function Home() {
   const [search, setSearch] = useState("");
+  const [selectedDifficulty, setSelectedDifficulty] = useState<
+    Option["id"] | undefined
+  >(undefined);
+  const [selectedCuisine, setSelectedCuisine] = useState<
+    Option["id"] | undefined
+  >(undefined);
+  const [selectedDiet, setSelectedDiet] = useState<Option["id"] | undefined>(
+    undefined
+  );
 
   const {
     data,
@@ -17,9 +31,21 @@ function Home() {
     isFetchingNextPage,
     isLoading,
   } = useInfiniteQuery({
-    queryKey: ["recipes", search],
+    queryKey: [
+      "recipes",
+      search,
+      selectedDifficulty,
+      selectedCuisine,
+      selectedDiet,
+    ],
     queryFn: async ({ pageParam }) =>
-      getRecipes({ _page: pageParam, q: search }),
+      getRecipes({
+        _page: pageParam,
+        q: search,
+        difficultyId: selectedDifficulty,
+        cuisineId: selectedCuisine,
+        dietId: selectedDiet,
+      }),
     initialPageParam: 0,
     placeholderData: (previousData) => previousData,
     getNextPageParam: (lastPage, allPages) => {
@@ -57,6 +83,9 @@ function Home() {
           value={search}
         />
       )}
+      <CuisineFilterSelect setValue={setSelectedCuisine} />
+      <DifficultyFilterSelect setValue={setSelectedDifficulty} />
+      <DietFilterSelect setValue={setSelectedDiet} />
       {!data && isLoading && (
         <div className="flex justify-center items-center w-full">
           <div
@@ -128,6 +157,87 @@ function Home() {
           )}
         </button>
       </div>
+    </section>
+  );
+}
+
+function CuisineFilterSelect(props: {
+  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+}) {
+  const { setValue } = props;
+
+  const { data } = useQuery({
+    queryKey: ["cuisines"],
+    queryFn: () => getCuisines(),
+  });
+
+  return (
+    <section>
+      <h3>Cuisine</h3>
+      <select
+        name="cuisine"
+        className="block w-1/2 px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        onChange={(e) => setValue(e.target.value)}
+      >
+        {data?.map((e) => (
+          <option key={e.id} value={e.id}>
+            {e.name}
+          </option>
+        ))}
+      </select>
+    </section>
+  );
+}
+function DifficultyFilterSelect(props: {
+  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+}) {
+  const { setValue } = props;
+
+  const { data } = useQuery({
+    queryKey: ["difficulty"],
+    queryFn: () => getDifficulties(),
+  });
+
+  return (
+    <section>
+      <h3>Difficulty</h3>
+      <select
+        name="difficulty"
+        className="block w-1/2 px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        onChange={(e) => setValue(e.target.value)}
+      >
+        {data?.map((e) => (
+          <option key={e.id} value={e.id}>
+            {e.name}
+          </option>
+        ))}
+      </select>
+    </section>
+  );
+}
+
+function DietFilterSelect(props: {
+  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+}) {
+  const { setValue } = props;
+  const { data } = useQuery({
+    queryKey: ["Diet"],
+    queryFn: () => getDiets(),
+  });
+
+  return (
+    <section>
+      <h3>Diet</h3>
+      <select
+        className="block w-1/2 px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        onChange={(e) => setValue(e.target.value)}
+      >
+        {data?.map((e) => (
+          <option key={e.id} value={e.id}>
+            {e.name}
+          </option>
+        ))}
+      </select>
     </section>
   );
 }
