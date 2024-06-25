@@ -6,22 +6,18 @@ import {
   getDifficulties,
   getRecipes,
 } from "../api.ts/calls";
-import { BASE_API_URL } from "../api.ts/BASE_API_URL";
-import DifficultyCardBadge from "../components/DifficultyBadge";
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import RecipeCard from "../components/RecipeCard";
 
 function Home() {
   const [search, setSearch] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState<
-    Option["id"] | undefined
-  >(undefined);
-  const [selectedCuisine, setSelectedCuisine] = useState<
-    Option["id"] | undefined
-  >(undefined);
-  const [selectedDiet, setSelectedDiet] = useState<Option["id"] | undefined>(
-    undefined
+    Option["id"] | string
+  >("");
+  const [selectedCuisine, setSelectedCuisine] = useState<Option["id"] | string>(
+    ""
   );
+  const [selectedDiet, setSelectedDiet] = useState<Option["id"] | string>("");
 
   const {
     data,
@@ -42,9 +38,9 @@ function Home() {
       getRecipes({
         _page: pageParam,
         q: search,
-        difficultyId: selectedDifficulty,
-        cuisineId: selectedCuisine,
-        dietId: selectedDiet,
+        difficultyId: selectedDifficulty ? selectedDifficulty : undefined,
+        cuisineId: selectedCuisine ? selectedCuisine : undefined,
+        dietId: selectedDiet ? selectedDiet : undefined,
       }),
     initialPageParam: 0,
     placeholderData: (previousData) => previousData,
@@ -58,6 +54,11 @@ function Home() {
 
   const handleClick = () => {
     fetchNextPage();
+  };
+  const resetFilters = () => {
+    setSelectedCuisine("");
+    setSelectedDifficulty("");
+    setSelectedDiet("");
   };
 
   return (
@@ -83,9 +84,31 @@ function Home() {
           value={search}
         />
       )}
-      <CuisineFilterSelect setValue={setSelectedCuisine} />
-      <DifficultyFilterSelect setValue={setSelectedDifficulty} />
-      <DietFilterSelect setValue={setSelectedDiet} />
+      <button onClick={resetFilters}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18 18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+      <CuisineFilterSelect
+        value={selectedCuisine}
+        setValue={setSelectedCuisine}
+      />
+      <DifficultyFilterSelect
+        value={selectedDifficulty}
+        setValue={setSelectedDifficulty}
+      />
+      <DietFilterSelect value={selectedDiet} setValue={setSelectedDiet} />
       {!data && isLoading && (
         <div className="flex justify-center items-center w-full">
           <div
@@ -136,9 +159,10 @@ function Home() {
 }
 
 function CuisineFilterSelect(props: {
-  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+  value: Option["id"] | string;
+  setValue: React.Dispatch<React.SetStateAction<Option["id"] | string>>;
 }) {
-  const { setValue } = props;
+  const { value, setValue } = props;
 
   const { data } = useQuery({
     queryKey: ["cuisines"],
@@ -152,7 +176,9 @@ function CuisineFilterSelect(props: {
         name="cuisine"
         className="block w-1/2 px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         onChange={(e) => setValue(e.target.value)}
+        value={value}
       >
+        <option value="">All</option>
         {data?.map((e) => (
           <option key={e.id} value={e.id}>
             {e.name}
@@ -163,9 +189,10 @@ function CuisineFilterSelect(props: {
   );
 }
 function DifficultyFilterSelect(props: {
-  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+  value: Option["id"] | string;
+  setValue: React.Dispatch<React.SetStateAction<Option["id"] | string>>;
 }) {
-  const { setValue } = props;
+  const { value, setValue } = props;
 
   const { data } = useQuery({
     queryKey: ["difficulty"],
@@ -179,7 +206,9 @@ function DifficultyFilterSelect(props: {
         name="difficulty"
         className="block w-1/2 px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         onChange={(e) => setValue(e.target.value)}
+        value={value}
       >
+        <option value="">All</option>
         {data?.map((e) => (
           <option key={e.id} value={e.id}>
             {e.name}
@@ -191,11 +220,12 @@ function DifficultyFilterSelect(props: {
 }
 
 function DietFilterSelect(props: {
-  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+  value: Option["id"] | string;
+  setValue: React.Dispatch<React.SetStateAction<Option["id"] | string>>;
 }) {
-  const { setValue } = props;
+  const { value, setValue } = props;
   const { data } = useQuery({
-    queryKey: ["Diet"],
+    queryKey: ["diet"],
     queryFn: () => getDiets(),
   });
 
@@ -205,7 +235,9 @@ function DietFilterSelect(props: {
       <select
         className="block w-1/2 px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         onChange={(e) => setValue(e.target.value)}
+        value={value}
       >
+        <option value="">All</option>
         {data?.map((e) => (
           <option key={e.id} value={e.id}>
             {e.name}
