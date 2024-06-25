@@ -2,6 +2,7 @@ import { Recipe } from "../types/api";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getRecipes } from "../api.ts/calls";
 import { BASE_API_URL } from "../api.ts/BASE_API_URL";
+import DifficultyCardBadge from "../components/DifficultyBadge";
 
 function Home() {
   const {
@@ -35,14 +36,16 @@ function Home() {
       <div className="bg-gray-100 flex items-center justify-center text-center">
         <div className="px-2 py-4">
           <h2 className="text-lg md:text-2xl">Welcome to your Recipe Book</h2>
-          <h3 className="text-md md:text-xl font-semibold">Explore our recipes online!</h3>
+          <h3 className="text-md md:text-xl font-semibold">
+            Explore our recipes online!
+          </h3>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {isFetched &&
           data?.pages?.map((page: Recipe[]) =>
             page.map((recipe: Recipe) => {
-              const { id, name, image } = recipe;
+              const { id, name, image, difficultyId } = recipe;
               return (
                 <article
                   key={id}
@@ -58,6 +61,9 @@ function Home() {
                   </div>
                   <div className="px-6 py-4 flex flex-col justify-center">
                     <div className="font-bold text-xl mb-2">{name}</div>
+                    <DifficultyCardBadge
+                      difficultyId={difficultyId.toString()}
+                    />
                   </div>
                 </article>
               );
