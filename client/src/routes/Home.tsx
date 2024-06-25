@@ -91,7 +91,7 @@ function Home() {
 
         {!data && <p>Loading...</p>}
       </div>
-      <div className="my-6 text-center">
+      <div className="my-6 flex justify-center">
         <button
           onClick={() => handleClick()}
           disabled={!hasNextPage || isFetchingNextPage}
@@ -103,19 +103,26 @@ function Home() {
             }
             ${
               hasNextPage
-                ? "py-3 px-6 rounded-full text-white text-lg"
+                ? "py-3 px-6 rounded-full text-white text-lg flex items-center justify-center"
                 : "hidden"
             }
           `}
         >
-          {isFetchingNextPage
-            ? "Loading more..."
-            : hasNextPage
-            ? "Load More"
-            : null}
+          {isFetchingNextPage ? (
+            <>
+              <div
+                className="inline-block h-4 w-4 mr-2 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                role="status"
+              ></div>
+              <span>Loading more...</span>
+            </>
+          ) : (
+            "Load More"
+          )}
         </button>
       </div>
     </section>
   );
 }
+
 export default Home;
