@@ -24,6 +24,7 @@ function Home() {
     fetchNextPage,
     isError,
     hasNextPage,
+    isFetching,
     isFetchingNextPage,
     isLoading,
   } = useRecipies({
@@ -145,7 +146,16 @@ function Home() {
           ) : (
             "Load More"
           )}
-        </button>
+        </button>{" "}
+        {!hasNextPage && !isFetchingNextPage && (
+          <div className="mt-4">
+            <p className="font-semibold">No more recipes</p>
+          </div>
+        )}
+      </div>
+
+      <div>
+        {isFetching && !isFetchingNextPage ? "Loading more recipes..." : null}
       </div>
     </section>
   );
