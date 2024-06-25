@@ -23,7 +23,7 @@ function Home() {
     initialPageParam: 0,
     placeholderData: (previousData) => previousData,
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length <= 0) {
+      if (lastPage.length < 6) {
         return undefined;
       }
       return allPages.length + 1;
@@ -114,15 +114,6 @@ function Home() {
             ? "Load More"
             : null}
         </button>
-        {!hasNextPage && !isFetchingNextPage && (
-          <div className="mt-4">
-            <p className="font-semibold">No more recipes</p>
-          </div>
-        )}
-      </div>
-
-      <div>
-        {isFetching && !isFetchingNextPage ? "Loading more recipes..." : null}
       </div>
     </section>
   );
