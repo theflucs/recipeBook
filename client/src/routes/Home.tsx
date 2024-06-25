@@ -26,30 +26,11 @@ function Home() {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = useInfiniteQuery({
-    queryKey: [
-      "recipes",
-      search,
-      selectedDifficulty,
-      selectedCuisine,
-      selectedDiet,
-    ],
-    queryFn: async ({ pageParam }) =>
-      getRecipes({
-        _page: pageParam,
-        q: search,
-        difficultyId: selectedDifficulty ? selectedDifficulty : undefined,
-        cuisineId: selectedCuisine ? selectedCuisine : undefined,
-        dietId: selectedDiet ? selectedDiet : undefined,
-      }),
-    initialPageParam: 0,
-    placeholderData: (previousData) => previousData,
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length < 6) {
-        return undefined;
-      }
-      return allPages.length + 1;
-    },
+  } = useRecipies({
+    search,
+    selectedDifficulty,
+    selectedCuisine,
+    selectedDiet,
   });
 
   const handleClick = () => {
@@ -156,6 +137,42 @@ function Home() {
       </div>
     </section>
   );
+}
+
+type UseRecipiesProps = {
+  search: string;
+  selectedDifficulty: Option["id"] | string;
+  selectedCuisine: Option["id"] | string;
+  selectedDiet: Option["id"] | string;
+};
+
+function useRecipies(props: UseRecipiesProps) {
+  const { search, selectedDifficulty, selectedCuisine, selectedDiet } = props;
+  return useInfiniteQuery({
+    queryKey: [
+      "recipes",
+      search,
+      selectedDifficulty,
+      selectedCuisine,
+      selectedDiet,
+    ],
+    queryFn: async ({ pageParam }) =>
+      getRecipes({
+        _page: pageParam,
+        q: search,
+        difficultyId: selectedDifficulty ? selectedDifficulty : undefined,
+        cuisineId: selectedCuisine ? selectedCuisine : undefined,
+        dietId: selectedDiet ? selectedDiet : undefined,
+      }),
+    initialPageParam: 0,
+    placeholderData: (previousData) => previousData,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < 6) {
+        return undefined;
+      }
+      return allPages.length + 1;
+    },
+  });
 }
 
 function CuisineFilterSelect(props: {
