@@ -2,7 +2,7 @@ import React from "react";
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="bg-gray-100">
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <h1 className="text-lg font-semibold">Online Recipe Book</h1>
