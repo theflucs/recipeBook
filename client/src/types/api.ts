@@ -3,11 +3,13 @@ export type Recipe = {
     name: string;
     ingredients: string[];
     instructions: string;
-    cuisineId: number;
-    cuisine: string;
-    difficultyId: string;
-    difficulty: string;
     image: string;
+    cuisineId: number;
+    difficultyId: string;
+    dietId: string;
+    cuisine?: Option;
+    difficulty?: Option;
+    diet?: Option
 };
 
 export type Comment = {
