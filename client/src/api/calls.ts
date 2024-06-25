@@ -29,7 +29,7 @@ export const getRecipes: GetRecipesAPI = async (payload) => {
 type GetRecipeDetailAPI = (id: string) => Promise<Recipe>;
 export const getRecipeDetail: GetRecipeDetailAPI = async (id: string) => {
     const response = await axiosInstance.get(
-        `${BASE_API_URL}/recipes/${id}`
+        `${BASE_API_URL}/recipes/${id}?_expand=cuisine`,
     );
     return response.data;
 }

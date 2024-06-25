@@ -28,7 +28,8 @@ function ReceipeDetail() {
   if (error) {
     return <p>Error loading recipe</p>;
   }
-  const { name, image, difficultyId, instructions, ingredients } = data;
+  const { name, image, difficultyId, instructions, ingredients, cuisine } =
+    data;
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-8">
@@ -43,8 +44,9 @@ function ReceipeDetail() {
           <DifficultyCardBadge difficultyId={difficultyId} />
         </div>
         <div>
-          <h1 className="text-3xl font-bold mb-4">{name}</h1>
-          <h2 className="text-xl font-bold mb-2">Ingredients:</h2>
+          <h1 className="text-3xl font-bold mb-2">{name}</h1>
+          <h2>Cuisine: {cuisine?.name}</h2>
+          <h2 className="text-xl font-bold mt-4 mb-2">Ingredients:</h2>
           <ul className="list-disc pl-8">
             {ingredients?.map((ingredient) => (
               <li key={ingredient}>{ingredient}</li>
