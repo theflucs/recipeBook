@@ -21,6 +21,7 @@ function Home() {
     queryFn: async ({ pageParam }) =>
       getRecipes({ _page: pageParam, q: search }),
     initialPageParam: 0,
+    placeholderData: (previousData) => previousData,
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.length <= 0) {
         return undefined;
