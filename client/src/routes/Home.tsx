@@ -65,31 +65,43 @@ function Home() {
           value={search}
         />
       )}
-      <button onClick={resetFilters}>
+      <button
+        onClick={resetFilters}
+        className="flex justify-center items-center space-x-2 mb-4"
+      >
+        <span>Reset Filters</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
           stroke="currentColor"
-          className="size-6"
+          className="w-6 h-6"
         >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            d="M6 18 18 6M6 6l12 12"
+            d="M6 18L18 6M6 6l12 12"
           />
         </svg>
       </button>
-      <CuisineFilterSelect
-        value={selectedCuisine}
-        setValue={setSelectedCuisine}
-      />
-      <DifficultyFilterSelect
-        value={selectedDifficulty}
-        setValue={setSelectedDifficulty}
-      />
-      <DietFilterSelect value={selectedDiet} setValue={setSelectedDiet} />
+      <section className="flex justify-between space-x-4 mb-4">
+        <div className="w-1/3">
+          <CuisineFilterSelect
+            value={selectedCuisine}
+            setValue={setSelectedCuisine}
+          />
+        </div>
+        <div className="w-1/3">
+          <DifficultyFilterSelect
+            value={selectedDifficulty}
+            setValue={setSelectedDifficulty}
+          />
+        </div>
+        <div className="w-1/3">
+          <DietFilterSelect value={selectedDiet} setValue={setSelectedDiet} />
+        </div>
+      </section>
       {!data && isLoading && (
         <div className="flex justify-center items-center w-full">
           <div
@@ -98,13 +110,13 @@ function Home() {
           ></div>
         </div>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {data?.pages?.map((page: Recipe[]) =>
           page.map((recipe: Recipe) => (
             <RecipeCard recipe={recipe} key={recipe.id} />
           ))
         )}
-      </div>
+      </section>
       <div className="my-6 flex justify-center">
         <button
           onClick={handleClick}
@@ -187,11 +199,11 @@ function CuisineFilterSelect(props: {
   });
 
   return (
-    <section>
-      <h3>Cuisine</h3>
+    <div>
+      <h3 className="mb-2">Cuisine</h3>
       <select
         name="cuisine"
-        className="block w-1/2 px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        className="block w-full px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         onChange={(e) => setValue(e.target.value)}
         value={value}
       >
@@ -202,9 +214,10 @@ function CuisineFilterSelect(props: {
           </option>
         ))}
       </select>
-    </section>
+    </div>
   );
 }
+
 function DifficultyFilterSelect(props: {
   value: Option["id"] | string;
   setValue: React.Dispatch<React.SetStateAction<Option["id"] | string>>;
@@ -217,11 +230,11 @@ function DifficultyFilterSelect(props: {
   });
 
   return (
-    <section>
-      <h3>Difficulty</h3>
+    <div>
+      <h3 className="mb-2">Difficulty</h3>
       <select
         name="difficulty"
-        className="block w-1/2 px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        className="block w-full px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         onChange={(e) => setValue(e.target.value)}
         value={value}
       >
@@ -232,7 +245,7 @@ function DifficultyFilterSelect(props: {
           </option>
         ))}
       </select>
-    </section>
+    </div>
   );
 }
 
@@ -247,10 +260,10 @@ function DietFilterSelect(props: {
   });
 
   return (
-    <section>
-      <h3>Diet</h3>
+    <div>
+      <h3 className="mb-2">Diet</h3>
       <select
-        className="block w-1/2 px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        className="block w-full px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         onChange={(e) => setValue(e.target.value)}
         value={value}
       >
@@ -261,7 +274,7 @@ function DietFilterSelect(props: {
           </option>
         ))}
       </select>
-    </section>
+    </div>
   );
 }
 
