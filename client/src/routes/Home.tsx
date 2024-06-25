@@ -6,22 +6,18 @@ import {
   getDifficulties,
   getRecipes,
 } from "../api.ts/calls";
-import { BASE_API_URL } from "../api.ts/BASE_API_URL";
-import DifficultyCardBadge from "../components/DifficultyBadge";
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import RecipeCard from "../components/RecipeCard";
 
 function Home() {
   const [search, setSearch] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState<
-    Option["id"] | undefined
-  >(undefined);
-  const [selectedCuisine, setSelectedCuisine] = useState<
-    Option["id"] | undefined
-  >(undefined);
-  const [selectedDiet, setSelectedDiet] = useState<Option["id"] | undefined>(
-    undefined
+    Option["id"] | string
+  >("");
+  const [selectedCuisine, setSelectedCuisine] = useState<Option["id"] | string>(
+    ""
   );
+  const [selectedDiet, setSelectedDiet] = useState<Option["id"] | string>("");
 
   const {
     data,
@@ -30,34 +26,20 @@ function Home() {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-  } = useInfiniteQuery({
-    queryKey: [
-      "recipes",
-      search,
-      selectedDifficulty,
-      selectedCuisine,
-      selectedDiet,
-    ],
-    queryFn: async ({ pageParam }) =>
-      getRecipes({
-        _page: pageParam,
-        q: search,
-        difficultyId: selectedDifficulty,
-        cuisineId: selectedCuisine,
-        dietId: selectedDiet,
-      }),
-    initialPageParam: 0,
-    placeholderData: (previousData) => previousData,
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length < 6) {
-        return undefined;
-      }
-      return allPages.length + 1;
-    },
+  } = useRecipies({
+    search,
+    selectedDifficulty,
+    selectedCuisine,
+    selectedDiet,
   });
 
   const handleClick = () => {
     fetchNextPage();
+  };
+  const resetFilters = () => {
+    setSelectedCuisine("");
+    setSelectedDifficulty("");
+    setSelectedDiet("");
   };
 
   return (
@@ -83,9 +65,43 @@ function Home() {
           value={search}
         />
       )}
-      <CuisineFilterSelect setValue={setSelectedCuisine} />
-      <DifficultyFilterSelect setValue={setSelectedDifficulty} />
-      <DietFilterSelect setValue={setSelectedDiet} />
+      <button
+        onClick={resetFilters}
+        className="flex justify-center items-center space-x-2 mb-4"
+      >
+        <span>Reset Filters</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+      <section className="flex justify-between space-x-4 mb-4">
+        <div className="w-1/3">
+          <CuisineFilterSelect
+            value={selectedCuisine}
+            setValue={setSelectedCuisine}
+          />
+        </div>
+        <div className="w-1/3">
+          <DifficultyFilterSelect
+            value={selectedDifficulty}
+            setValue={setSelectedDifficulty}
+          />
+        </div>
+        <div className="w-1/3">
+          <DietFilterSelect value={selectedDiet} setValue={setSelectedDiet} />
+        </div>
+      </section>
       {!data && isLoading && (
         <div className="flex justify-center items-center w-full">
           <div
@@ -94,39 +110,13 @@ function Home() {
           ></div>
         </div>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {data?.pages?.map((page: Recipe[]) =>
           page.map((recipe: Recipe) => (
-            <article
-              key={recipe.id}
-              className="max-w-xs w-full overflow-hidden shadow-lg bg-white flex flex-col justify-between mx-auto mb-4 rounded-b-lg"
-            >
-              <div className="w-full h-48 overflow-hidden">
-                <img
-                  loading="lazy"
-                  className="w-full h-full object-cover"
-                  src={`${BASE_API_URL}${recipe.image}`}
-                  alt={recipe.name}
-                />
-              </div>
-              <div className="px-6 py-4 flex flex-col justify-center">
-                <div className="font-bold text-xl mb-2">{recipe.name}</div>
-                <DifficultyCardBadge
-                  difficultyId={recipe.difficultyId.toString()}
-                />
-              </div>
-              <div className="mt-auto">
-                <Link
-                  to={`/recipes/${recipe.id}`}
-                  className="block w-full text-center bg-amber-400 hover:bg-amber-500 text-white py-2 rounded-b-lg"
-                >
-                  See Details
-                </Link>
-              </div>
-            </article>
+            <RecipeCard recipe={recipe} key={recipe.id} />
           ))
         )}
-      </div>
+      </section>
       <div className="my-6 flex justify-center">
         <button
           onClick={handleClick}
@@ -161,10 +151,47 @@ function Home() {
   );
 }
 
+type UseRecipiesProps = {
+  search: string;
+  selectedDifficulty: Option["id"] | string;
+  selectedCuisine: Option["id"] | string;
+  selectedDiet: Option["id"] | string;
+};
+
+function useRecipies(props: UseRecipiesProps) {
+  const { search, selectedDifficulty, selectedCuisine, selectedDiet } = props;
+  return useInfiniteQuery({
+    queryKey: [
+      "recipes",
+      search,
+      selectedDifficulty,
+      selectedCuisine,
+      selectedDiet,
+    ],
+    queryFn: async ({ pageParam }) =>
+      getRecipes({
+        _page: pageParam,
+        q: search,
+        difficultyId: selectedDifficulty ? selectedDifficulty : undefined,
+        cuisineId: selectedCuisine ? selectedCuisine : undefined,
+        dietId: selectedDiet ? selectedDiet : undefined,
+      }),
+    initialPageParam: 0,
+    placeholderData: (previousData) => previousData,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < 6) {
+        return undefined;
+      }
+      return allPages.length + 1;
+    },
+  });
+}
+
 function CuisineFilterSelect(props: {
-  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+  value: Option["id"] | string;
+  setValue: React.Dispatch<React.SetStateAction<Option["id"] | string>>;
 }) {
-  const { setValue } = props;
+  const { value, setValue } = props;
 
   const { data } = useQuery({
     queryKey: ["cuisines"],
@@ -172,26 +199,30 @@ function CuisineFilterSelect(props: {
   });
 
   return (
-    <section>
-      <h3>Cuisine</h3>
+    <div>
+      <h3 className="mb-2">Cuisine</h3>
       <select
         name="cuisine"
-        className="block w-1/2 px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        className="block w-full px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         onChange={(e) => setValue(e.target.value)}
+        value={value}
       >
+        <option value="">All</option>
         {data?.map((e) => (
           <option key={e.id} value={e.id}>
             {e.name}
           </option>
         ))}
       </select>
-    </section>
+    </div>
   );
 }
+
 function DifficultyFilterSelect(props: {
-  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+  value: Option["id"] | string;
+  setValue: React.Dispatch<React.SetStateAction<Option["id"] | string>>;
 }) {
-  const { setValue } = props;
+  const { value, setValue } = props;
 
   const { data } = useQuery({
     queryKey: ["difficulty"],
@@ -199,46 +230,51 @@ function DifficultyFilterSelect(props: {
   });
 
   return (
-    <section>
-      <h3>Difficulty</h3>
+    <div>
+      <h3 className="mb-2">Difficulty</h3>
       <select
         name="difficulty"
-        className="block w-1/2 px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        className="block w-full px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         onChange={(e) => setValue(e.target.value)}
+        value={value}
       >
+        <option value="">All</option>
         {data?.map((e) => (
           <option key={e.id} value={e.id}>
             {e.name}
           </option>
         ))}
       </select>
-    </section>
+    </div>
   );
 }
 
 function DietFilterSelect(props: {
-  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+  value: Option["id"] | string;
+  setValue: React.Dispatch<React.SetStateAction<Option["id"] | string>>;
 }) {
-  const { setValue } = props;
+  const { value, setValue } = props;
   const { data } = useQuery({
-    queryKey: ["Diet"],
+    queryKey: ["diet"],
     queryFn: () => getDiets(),
   });
 
   return (
-    <section>
-      <h3>Diet</h3>
+    <div>
+      <h3 className="mb-2">Diet</h3>
       <select
-        className="block w-1/2 px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        className="block w-full px-4 py-2 rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         onChange={(e) => setValue(e.target.value)}
+        value={value}
       >
+        <option value="">All</option>
         {data?.map((e) => (
           <option key={e.id} value={e.id}>
             {e.name}
           </option>
         ))}
       </select>
-    </section>
+    </div>
   );
 }
 
