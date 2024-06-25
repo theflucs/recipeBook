@@ -3,6 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { getRecipes } from "../api.ts/calls";
 import { BASE_API_URL } from "../api.ts/BASE_API_URL";
 import DifficultyCardBadge from "../components/DifficultyBadge";
+import { Link } from "react-router-dom";
 
 function Home() {
   const {
@@ -41,7 +42,7 @@ function Home() {
           </h3>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {isFetched &&
           data?.pages?.map((page: Recipe[]) =>
             page.map((recipe: Recipe) => {
@@ -49,9 +50,9 @@ function Home() {
               return (
                 <article
                   key={id}
-                  className="max-w-xs w-full overflow-hidden shadow-lg bg-white flex flex-col justify-between mx-auto mb-4"
+                  className="max-w-xs w-full overflow-hidden shadow-lg bg-white flex flex-col justify-between mx-auto mb-4 rounded-b-lg"
                 >
-                  <div className="w-full h-48 overflow-hidden rounded-md">
+                  <div className="w-full h-48 overflow-hidden">
                     <img
                       loading="lazy"
                       className="w-full h-full object-cover"
@@ -64,6 +65,14 @@ function Home() {
                     <DifficultyCardBadge
                       difficultyId={difficultyId.toString()}
                     />
+                  </div>
+                  <div className="mt-auto">
+                    <Link
+                      to={`/recipes/${recipe.id}`}
+                      className="block w-full text-center bg-amber-400 hover:bg-amber-500 text-white py-2 rounded-b-lg"
+                    >
+                      See Details
+                    </Link>
                   </div>
                 </article>
               );

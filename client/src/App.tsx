@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import queryClient from "./queryClient";
 import AppLayout from "./components/AppLayout";
 import Home from "./routes/Home";
+import RecipeDetail from "./routes/RecipeDetail";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         <AppLayout>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/recipes/:id" element={<RecipeDetail />} />
           </Routes>
         </AppLayout>
       </QueryClientProvider>

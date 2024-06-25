@@ -35,7 +35,7 @@ function DifficultyCardBadge({ difficultyId }: DifficultyBadgeProps) {
 
   return (
     <div
-      className={`px-2 py-1 rounded-full ${colorClass} text-white text-sm w-fit`}
+      className={`px-2 py-1 rounded-full ${colorClass} text-white text-sm w-fit absolute top-2 right-2`}
     >
       {difficultyLevel}
     </div>
