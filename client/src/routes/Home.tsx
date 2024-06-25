@@ -12,10 +12,10 @@ function Home() {
   const {
     data,
     fetchNextPage,
-    isFetching,
     isError,
     hasNextPage,
     isFetchingNextPage,
+    isLoading,
   } = useInfiniteQuery({
     queryKey: ["recipes", search],
     queryFn: async ({ pageParam }) =>
@@ -35,7 +35,7 @@ function Home() {
   };
 
   return (
-    <section>
+    <section className="min-h-screen flex flex-col">
       {isError && <p>Error</p>}
       <div className="bg-gray-100 flex items-center justify-center text-center">
         <div className="px-2 py-4">
@@ -45,55 +45,62 @@ function Home() {
           </h3>
         </div>
       </div>
-      <input
-        className="w-full py-2 pl-10 pr-4 mb-4 rounded-lg focus:outline-none focus:bg-white"
-        type="text"
-        placeholder="Search..."
-        onChange={(e) => {
-          e.preventDefault();
-          setSearch(e.target.value);
-        }}
-        value={search}
-      />
+      {data && (
+        <input
+          className="w-full py-2 pl-10 pr-4 mb-4 rounded-lg focus:outline-none focus:bg-white"
+          type="text"
+          placeholder="Search..."
+          onChange={(e) => {
+            e.preventDefault();
+            setSearch(e.target.value);
+          }}
+          value={search}
+        />
+      )}
+      {!data && isLoading && (
+        <div className="flex justify-center items-center w-full">
+          <div
+            className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-amber-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+            role="status"
+          ></div>
+        </div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {data?.pages?.map((page: Recipe[]) =>
-          page.map((recipe: Recipe) => {
-            const { id, name, image, difficultyId } = recipe;
-            return (
-              <article
-                key={id}
-                className="max-w-xs w-full overflow-hidden shadow-lg bg-white flex flex-col justify-between mx-auto mb-4 rounded-b-lg"
-              >
-                <div className="w-full h-48 overflow-hidden">
-                  <img
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                    src={`${BASE_API_URL}${image}`}
-                    alt={name}
-                  />
-                </div>
-                <div className="px-6 py-4 flex flex-col justify-center">
-                  <div className="font-bold text-xl mb-2">{name}</div>
-                  <DifficultyCardBadge difficultyId={difficultyId.toString()} />
-                </div>
-                <div className="mt-auto">
-                  <Link
-                    to={`/recipes/${recipe.id}`}
-                    className="block w-full text-center bg-amber-400 hover:bg-amber-500 text-white py-2 rounded-b-lg"
-                  >
-                    See Details
-                  </Link>
-                </div>
-              </article>
-            );
-          })
+          page.map((recipe: Recipe) => (
+            <article
+              key={recipe.id}
+              className="max-w-xs w-full overflow-hidden shadow-lg bg-white flex flex-col justify-between mx-auto mb-4 rounded-b-lg"
+            >
+              <div className="w-full h-48 overflow-hidden">
+                <img
+                  loading="lazy"
+                  className="w-full h-full object-cover"
+                  src={`${BASE_API_URL}${recipe.image}`}
+                  alt={recipe.name}
+                />
+              </div>
+              <div className="px-6 py-4 flex flex-col justify-center">
+                <div className="font-bold text-xl mb-2">{recipe.name}</div>
+                <DifficultyCardBadge
+                  difficultyId={recipe.difficultyId.toString()}
+                />
+              </div>
+              <div className="mt-auto">
+                <Link
+                  to={`/recipes/${recipe.id}`}
+                  className="block w-full text-center bg-amber-400 hover:bg-amber-500 text-white py-2 rounded-b-lg"
+                >
+                  See Details
+                </Link>
+              </div>
+            </article>
+          ))
         )}
-
-        {!data && <p>Loading...</p>}
       </div>
       <div className="my-6 flex justify-center">
         <button
-          onClick={() => handleClick()}
+          onClick={handleClick}
           disabled={!hasNextPage || isFetchingNextPage}
           className={`
             ${
