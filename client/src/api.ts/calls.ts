@@ -41,6 +41,21 @@ export const getRecipeComments: GetRecipeCommentsAPI = async (id: string) => {
     return response.data;
 }
 
+export type PostCommentPayload = {
+    id: string;
+    comment: string;
+    rating: number;
+    date: string;
+}
+export const postComment: (payload: PostCommentPayload) => Promise<void> = async (payload) => {
+    const { id, comment, rating, date } = payload;
+    const response = await axiosInstance.post(
+        `${BASE_API_URL}/recipes/${id}/comments`,
+        { comment, rating, date }
+    );
+    return response.data;
+}
+
 type GetOptionsAPI = () => Promise<Option[]>;
 
 export const getCuisines: GetOptionsAPI = async () => {
@@ -61,3 +76,4 @@ export const getDiets: GetOptionsAPI = async () => {
     );
     return response.data;
 }
+

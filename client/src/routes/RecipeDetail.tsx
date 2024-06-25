@@ -1,9 +1,17 @@
 import { useParams } from "react-router-dom";
-import { getRecipeComments, getRecipeDetail } from "../api.ts/calls";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import DifficultyCardBadge from "../components/DifficultyBadge";
-import { BASE_API_URL } from "../api.ts/BASE_API_URL";
 import { format, parseISO } from "date-fns";
+import queryClient from "../queryClient";
+import { BASE_API_URL } from "../api.ts/BASE_API_URL";
+import Ratings from "../components/Ratings";
+import {
+  PostCommentPayload,
+  getRecipeComments,
+  getRecipeDetail,
+  postComment,
+} from "../api.ts/calls";
 
 function ReceipeDetail() {
   const { id } = useParams<{ id: string }>();
@@ -48,17 +56,28 @@ function ReceipeDetail() {
         </div>
       </div>
 
-      <Comments id={id} />
+      {id && <Comments id={id} />}
     </section>
   );
 }
 
-function Comments(props: { id: string | undefined }) {
+function Comments(props: { id: string }) {
   const { id } = props;
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(0);
 
   const { data, error } = useQuery({
     queryKey: ["comments", id],
     queryFn: () => getRecipeComments(id as string),
+  });
+
+  const postCommentMutation = useMutation({
+    mutationFn: (newComment: PostCommentPayload) => {
+      return postComment(newComment);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["comments", id] });
+    },
   });
 
   if (!data) {
@@ -68,18 +87,57 @@ function Comments(props: { id: string | undefined }) {
   if (error) {
     return <p>Error loading recipe</p>;
   }
+
+  const onChangeTextArea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    event.preventDefault();
+    setComment(event.target.value);
+  };
+
+  const submitComment = () => {
+    const payload: PostCommentPayload = {
+      id,
+      comment,
+      rating,
+      date: new Date().toISOString(),
+    };
+    if (payload.comment && payload.rating) {
+      postCommentMutation.mutate(payload);
+      setRating(0);
+      setComment("");
+    } else {
+      alert("Comment cannot be empty");
+    }
+  };
+
   return (
     <section className="max-w-7xl mx-auto py-8">
       <h2 className="text-xl font-bold mb-4">Comments</h2>
       {data.map((comment) => (
         <div className="mb-6 pb-4 border-b" key={comment.id}>
           <p className="font-bold text-lg mb-2">{comment.comment}</p>
+          <Ratings rating={comment.rating} />
           <p className="text-gray-500 mb-2">
             {format(parseISO(comment.date), "dd/MM/yyyy HH:mm")}
           </p>
-          <p className="text-gray-500 mb-2">Rating: {comment.rating}</p>
         </div>
       ))}
+
+      <div className="mt-4">
+        <h2 className="text-xl font-bold mb-4">Add a comment</h2>
+        <Ratings rating={rating} setRating={setRating} />
+        <textarea
+          className="w-full h-24 p-2"
+          onChange={onChangeTextArea}
+          value={comment}
+        ></textarea>
+
+        <button
+          className="bg-amber-400 hover:bg-amber-500 text-white py-2 px-4 rounded"
+          onClick={submitComment}
+        >
+          Submit
+        </button>
+      </div>
     </section>
   );
 }
