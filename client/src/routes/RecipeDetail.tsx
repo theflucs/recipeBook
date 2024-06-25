@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useRef } from "react";
+import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import DifficultyCardBadge from "../components/DifficultyBadge";
 import { format, parseISO } from "date-fns";
@@ -63,7 +63,8 @@ function ReceipeDetail() {
 
 function Comments(props: { id: string }) {
   const { id } = props;
-  const textAreaValueRef = useRef("");
+  const [comment, setComment] = useState("");
+  const [rating, setRating] = useState(0);
 
   const { data, error } = useQuery({
     queryKey: ["comments", id],
@@ -89,18 +90,20 @@ function Comments(props: { id: string }) {
 
   const onChangeTextArea = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     event.preventDefault();
-    textAreaValueRef.current = event.target.value;
+    setComment(event.target.value);
   };
 
   const submitComment = () => {
     const payload: PostCommentPayload = {
       id,
-      comment: textAreaValueRef.current,
-      rating: 5,
+      comment,
+      rating,
       date: new Date().toISOString(),
     };
     if (payload.comment && payload.rating) {
       postCommentMutation.mutate(payload);
+      setRating(0);
+      setComment("");
     } else {
       alert("Comment cannot be empty");
     }
@@ -112,19 +115,20 @@ function Comments(props: { id: string }) {
       {data.map((comment) => (
         <div className="mb-6 pb-4 border-b" key={comment.id}>
           <p className="font-bold text-lg mb-2">{comment.comment}</p>
+          <Ratings rating={comment.rating} />
           <p className="text-gray-500 mb-2">
             {format(parseISO(comment.date), "dd/MM/yyyy HH:mm")}
           </p>
-          <p className="text-gray-500 mb-2">Rating: {comment.rating}</p>
         </div>
       ))}
 
       <div className="mt-4">
         <h2 className="text-xl font-bold mb-4">Add a comment</h2>
-        <Ratings />
+        <Ratings rating={rating} setRating={setRating} />
         <textarea
-          className="w-full h-24"
+          className="w-full h-24 p-2"
           onChange={onChangeTextArea}
+          value={comment}
         ></textarea>
 
         <button
