@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { BASE_API_URL } from "../api.ts/BASE_API_URL";
-import DifficultyCardBadge from "./DifficultyBadge";
 import { Recipe } from "../types/api";
+import DifficultyCardBadge from "./DifficultyBadge";
 
 function RecipeCard(props: { recipe: Recipe }) {
   const { id, name, difficultyId, image } = props.recipe;
@@ -18,7 +18,7 @@ function RecipeCard(props: { recipe: Recipe }) {
           alt={name}
         />
       </div>
-      <div className="px-6 py-4 flex flex-col justify-center">
+      <div className="px-6 py-4 flex flex-col items-center">
         <div className="font-bold text-xl mb-2">{name}</div>
         <DifficultyCardBadge difficultyId={difficultyId} />
       </div>
