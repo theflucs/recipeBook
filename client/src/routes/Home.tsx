@@ -97,33 +97,7 @@ function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {data?.pages?.map((page: Recipe[]) =>
           page.map((recipe: Recipe) => (
-            <article
-              key={recipe.id}
-              className="max-w-xs w-full overflow-hidden shadow-lg bg-white flex flex-col justify-between mx-auto mb-4 rounded-b-lg"
-            >
-              <div className="w-full h-48 overflow-hidden">
-                <img
-                  loading="lazy"
-                  className="w-full h-full object-cover"
-                  src={`${BASE_API_URL}${recipe.image}`}
-                  alt={recipe.name}
-                />
-              </div>
-              <div className="px-6 py-4 flex flex-col justify-center">
-                <div className="font-bold text-xl mb-2">{recipe.name}</div>
-                <DifficultyCardBadge
-                  difficultyId={recipe.difficultyId.toString()}
-                />
-              </div>
-              <div className="mt-auto">
-                <Link
-                  to={`/recipes/${recipe.id}`}
-                  className="block w-full text-center bg-amber-400 hover:bg-amber-500 text-white py-2 rounded-b-lg"
-                >
-                  See Details
-                </Link>
-              </div>
-            </article>
+            <RecipeCard recipe={recipe} key={recipe.id} />
           ))
         )}
       </div>
