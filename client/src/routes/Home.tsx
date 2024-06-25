@@ -5,7 +5,7 @@ import {
   getDiets,
   getDifficulties,
   getRecipes,
-} from "../api.ts/calls";
+} from "../api/calls";
 import { useState } from "react";
 import RecipeCard from "../components/RecipeCard";
 

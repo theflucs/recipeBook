@@ -19,6 +19,7 @@ export const getRecipes: GetRecipesAPI = async (payload) => {
             {
                 ...payload,
                 _limit: 6,
+                _expand: ["cuisine", "difficulty", "diet"],
             }
         }
     );

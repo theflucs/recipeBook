@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { BASE_API_URL } from "../api.ts/BASE_API_URL";
+import { BASE_API_URL } from "../api/BASE_API_URL";
 import { Recipe } from "../types/api";
 import DifficultyCardBadge from "./DifficultyBadge";
 

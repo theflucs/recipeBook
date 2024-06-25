@@ -4,14 +4,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import DifficultyCardBadge from "../components/DifficultyBadge";
 import { format, parseISO } from "date-fns";
 import queryClient from "../queryClient";
-import { BASE_API_URL } from "../api.ts/BASE_API_URL";
+import { BASE_API_URL } from "../api/BASE_API_URL";
 import Ratings from "../components/Ratings";
 import {
   PostCommentPayload,
   getRecipeComments,
   getRecipeDetail,
   postComment,
-} from "../api.ts/calls";
+} from "../api/calls";
 
 function ReceipeDetail() {
   const { id } = useParams<{ id: string }>();
