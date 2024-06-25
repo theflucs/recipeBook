@@ -5,6 +5,7 @@ import DifficultyCardBadge from "../components/DifficultyBadge";
 import { format, parseISO } from "date-fns";
 import queryClient from "../queryClient";
 import { BASE_API_URL } from "../api.ts/BASE_API_URL";
+import Ratings from "../components/Ratings";
 import {
   PostCommentPayload,
   getRecipeComments,
@@ -120,10 +121,12 @@ function Comments(props: { id: string }) {
 
       <div className="mt-4">
         <h2 className="text-xl font-bold mb-4">Add a comment</h2>
+        <Ratings />
         <textarea
           className="w-full h-24"
           onChange={onChangeTextArea}
         ></textarea>
+
         <button
           className="bg-amber-400 hover:bg-amber-500 text-white py-2 px-4 rounded"
           onClick={submitComment}
