@@ -2,11 +2,13 @@ import axiosInstance from "./axios";
 import { Comment, Recipe } from "../types/api";
 import { BASE_API_URL } from "./BASE_API_URL";
 
-type GetRecipesAPI = (page: number) => Promise<Recipe[]>;
+type GetRecipesAPI = (payload: { _page: number , q?: string}) => Promise<Recipe[]>;
 
-export const getRecipes: GetRecipesAPI = async (_page: number) => {
+export const getRecipes: GetRecipesAPI = async (payload) => {
+    const { _page, q } = payload;
     const response = await axiosInstance.get(
-        `${BASE_API_URL}/recipes?_page=${_page}&_limit=6`
+        `${BASE_API_URL}/recipes`,
+        { params: { _page, q, _limit: 6 } }
     );
     return response.data;
 }
