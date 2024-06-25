@@ -56,7 +56,7 @@ function Home() {
       </div>
       {data && (
         <input
-          className="w-full py-2 pl-10 pr-4 mb-4 rounded-lg focus:outline-none focus:bg-white"
+          className="py-2 pl-10 pr-4 mb-4 rounded-lg focus:outline-none focus:bg-white mx-8"
           type="text"
           placeholder="Search..."
           onChange={(e) => {
@@ -68,7 +68,7 @@ function Home() {
       )}
       <button
         onClick={resetFilters}
-        className="flex justify-center items-center space-x-2 mb-4"
+        className="flex justify-end items-center space-x-2 mr-8"
       >
         <span>Reset Filters</span>
         <svg
@@ -86,7 +86,7 @@ function Home() {
           />
         </svg>
       </button>
-      <section className="flex justify-between space-x-4 mb-4">
+      <section className="flex justify-between space-x-4 mb-4 mx-8">
         <div className="w-1/3">
           <CuisineFilterSelect
             value={selectedCuisine}

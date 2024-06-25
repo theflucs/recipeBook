@@ -41,7 +41,9 @@ function ReceipeDetail() {
             src={`${BASE_API_URL}${image}`}
             alt={name}
           />
-          <DifficultyCardBadge difficultyId={difficultyId} />
+          <div className="absolute top-4 right-4">
+            <DifficultyCardBadge difficultyId={difficultyId} />
+          </div>
         </div>
         <div>
           <h1 className="text-3xl font-bold mb-2">{name}</h1>
@@ -112,23 +114,25 @@ function Comments(props: { id: string }) {
   };
 
   return (
-    <section className="max-w-7xl mx-auto py-8">
-      <h2 className="text-xl font-bold mb-4">Comments</h2>
-      {data.map((comment) => (
-        <div className="mb-6 pb-4 border-b" key={comment.id}>
-          <p className="font-bold text-lg mb-2">{comment.comment}</p>
-          <Ratings rating={comment.rating} />
-          <p className="text-gray-500 mb-2">
-            {format(parseISO(comment.date), "dd/MM/yyyy HH:mm")}
-          </p>
-        </div>
-      ))}
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+      <div>
+        <h2 className="text-xl font-bold mb-4">Comments</h2>
+        {data.map((comment) => (
+          <div className="mb-6 pb-4 border-b" key={comment.id}>
+            <p className="font-bold text-lg mb-2">{comment.comment}</p>
+            <Ratings rating={comment.rating} />
+            <p className="text-gray-500 mb-2">
+              {format(parseISO(comment.date), "dd/MM/yyyy HH:mm")}
+            </p>
+          </div>
+        ))}
+      </div>
 
-      <div className="mt-4">
+      <div>
         <h2 className="text-xl font-bold mb-4">Add a comment</h2>
         <Ratings rating={rating} setRating={setRating} />
         <textarea
-          className="w-full h-24 p-2"
+          className="w-full h-24 p-2 mb-4 border rounded"
           onChange={onChangeTextArea}
           value={comment}
         ></textarea>
