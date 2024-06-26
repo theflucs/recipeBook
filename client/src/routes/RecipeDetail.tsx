@@ -43,7 +43,10 @@ function ReceipeDetail() {
             alt={name}
           />
           <div className="absolute top-4 right-4">
-            <DifficultyCardBadge difficultyId={difficultyId} />
+            <DifficultyCardBadge
+              difficultyId={difficultyId}
+              showHeader={false}
+            />
           </div>
         </div>
         <div>
