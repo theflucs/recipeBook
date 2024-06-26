@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 import { BASE_API_URL } from "../api/BASE_API_URL";
 import { Recipe } from "../types/api";
 import DifficultyCardBadge from "./DifficultyBadge";
+import CountryFlag from "./CountryFlag";
 
 function RecipeCard(props: { recipe: Recipe }) {
-  const { id, name, difficultyId, image } = props.recipe;
+  const { id, name, difficultyId, image, cuisine } = props.recipe;
   return (
     <article
       key={id}
@@ -18,9 +19,12 @@ function RecipeCard(props: { recipe: Recipe }) {
           alt={name}
         />
       </div>
-      <div className="px-6 py-4 flex flex-col items-center">
+      <div className="px-6 py-4 flex flex-col items-center text-center">
         <div className="font-bold text-xl mb-2">{name}</div>
-        <DifficultyCardBadge difficultyId={difficultyId} />
+        <div className="flex">
+          <CountryFlag cuisine={cuisine} />
+          <DifficultyCardBadge difficultyId={difficultyId} />
+        </div>
       </div>
       <div className="mt-auto">
         <Link

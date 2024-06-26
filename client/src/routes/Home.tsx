@@ -48,8 +48,8 @@ function Home() {
       {isError && <p>Error</p>}
       <div className="bg-gray-100 flex items-center justify-center text-center">
         <div className="px-2 py-4">
-          <h2 className="text-lg md:text-2xl">Welcome to your Recipe Book</h2>
-          <h3 className="text-md md:text-xl font-semibold">
+          <h2 className="text-xl md:text-2xl">Welcome to your Recipe Book</h2>
+          <h3 className="text-lg md:text-xl font-semibold text-orange-700">
             Explore our recipes online!
           </h3>
         </div>

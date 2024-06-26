@@ -1,8 +1,12 @@
 type DifficultyBadgeProps = {
   difficultyId: string;
+  showHeader?: boolean;
 };
 
-function DifficultyCardBadge({ difficultyId }: DifficultyBadgeProps) {
+function DifficultyCardBadge({
+  difficultyId,
+  showHeader = true,
+}: DifficultyBadgeProps) {
   const calcDifficulty = (
     difficultyId: string
   ): { text: string; colorClass: string } => {
@@ -34,10 +38,13 @@ function DifficultyCardBadge({ difficultyId }: DifficultyBadgeProps) {
   const { text: difficultyLevel, colorClass } = calcDifficulty(difficultyId);
 
   return (
-    <div
-      className={`px-2 py-1 rounded-full ${colorClass} text-white text-sm w-fit`}
-    >
-      {difficultyLevel}
+    <div className="flex items-center">
+      {showHeader && <h3 className="mr-1">Difficulty:</h3>}
+      <div
+        className={`px-2 py-1 rounded-full ${colorClass} text-white text-sm w-fit`}
+      >
+        {difficultyLevel}
+      </div>
     </div>
   );
 }
