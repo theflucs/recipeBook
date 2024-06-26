@@ -23,4 +23,6 @@ export type Comment = {
 export type Option = {
     id: string;
     name: string;
+    code?: string;
 };
+

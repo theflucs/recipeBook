@@ -12,6 +12,7 @@ import {
   getRecipeDetail,
   postComment,
 } from "../api/calls";
+import CountryFlag from "../components/CountryFlag";
 
 function ReceipeDetail() {
   const { id } = useParams<{ id: string }>();
@@ -47,7 +48,7 @@ function ReceipeDetail() {
         </div>
         <div>
           <h1 className="text-3xl font-bold mb-2">{name}</h1>
-          <h2>Cuisine: {cuisine?.name}</h2>
+          <CountryFlag cuisine={cuisine} />
           <h2 className="text-xl font-bold mt-4 mb-2">Ingredients:</h2>
           <ul className="list-disc pl-8">
             {ingredients?.map((ingredient) => (
