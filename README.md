@@ -1,7 +1,7 @@
 <!---
 Hi! We're happy you opened this file, not everyone does!
-To let us know you did, paste a capybara picture 
-in the How to Run section 😊 
+To let us know you did, paste a capybara picture
+in the How to Run section 😊
 These will be extra points for you!
 -->
 
@@ -29,11 +29,11 @@ written out. Please, write there instructions on how to run your code: we will u
 
 Your work will be assessed according to several criteria. As an example, these include:
 
-* Code quality
-* Design Patterns
-* Project Structure
-* Work quality (commits, branches, workflow, tests, ...)
-* Provided Documentation
+- Code quality
+- Design Patterns
+- Project Structure
+- Work quality (commits, branches, workflow, tests, ...)
+- Provided Documentation
 
 #### A Friendly Reminder:
 
@@ -62,7 +62,7 @@ fewer constraints as possible on your work. We appreciate if you could record an
 together with any questions that you will ask in a real-world scenario. If you want to choose our stack instead, we
 generally work with TypeScript and React.
 
----   
+---
 
 ### Problem Domain
 
@@ -94,10 +94,76 @@ Design a form that allows users to add new recipes by providing details such as 
 instructions, cuisine type, and dietary preference and an image.
 
 ### Challenge #4: Recipe Details and Comments
+
 Develop a recipe details page where users can view the full recipe, including ingredients, instructions, and user
 comments. Enable users to add comments and rate the recipe, displaying the average rating and updating the list of
 comments.
 
 ## How to run
 
-...
+# Client App of RecipeBook
+
+This react app is the client side of the recipeBook project.
+Users can browse, filter and search for recipes (**challenges 1 and 2**).
+Users can view the details of a recipe and leave a comment to it (**challenge 4**).
+
+## Tech Stack
+
+- `React` with `Vite`
+- `TypeScript`
+- `Tailwind css`
+- `Tanstack Query`
+- `Axios`
+- `React router`
+- `ESLint`
+- `Cypress`
+
+## Getting Started
+
+These instructions will get you the app up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+You need to have Node.js and npm installed on your machine.
+
+### Installing
+
+Install the project dependencies:
+
+**Make sure you're inside the folder client**
+
+or type `cd client` if you're in the project root.
+
+Then run `npm install`
+
+### Running the App
+
+To run the app, use the following command:
+
+`npm run dev`
+
+The app will open on `http://localhost:5173` - if is not in use. Check the terminal if needed.
+
+**Make sure the server is running too.**
+
+To run server, run the following command:
+
+```
+cd server
+npm run start
+```
+
+I suggest you to read the [server README](https://github.com/xtreamsrl/interviews-front-end-assignment/blob/main/server/README.md), if you have any issues related to it.
+
+### Running E2E tests
+
+The tests are made using [Cypress](https://www.cypress.io/).
+
+To run the tests, use the following command:
+
+`npm run cy:run`
+
+The tests rely on the use of the `data-cy` attribute.
+Be aware of it if you plan to make changes in the `Home` component `jsx`.
+
+## Happy cooking!
