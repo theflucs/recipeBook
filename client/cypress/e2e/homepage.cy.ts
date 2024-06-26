@@ -9,17 +9,17 @@ describe('initial ui elements render', () => {
     cy.title().should("include", "Recipe Book");
   });
   it("should have the correct homepage title", () => {
-    cy.get('#homepage-title').should('be.visible');
+    cy.get('[data-cy="homepage-title"]').should('be.visible');
   });
   it("should have the correct homepage subtitle", () => {
-    cy.get('#homepage-subtitle').should('be.visible');
+    cy.get('[data-cy=homepage-subtitle').should('be.visible');
   });
   it('should display the search input field', () => {
-    cy.get('#search-bar').should('be.visible');
+    cy.get('[data-cy=search-bar').should('be.visible');
   });
 
   it('should display the "Reset Filters" button', () => {
-    cy.get('#reset-filters-button')
+    cy.get('[data-cy=reset-filters-button')
       .contains('Reset Filters')
       .should('be.visible');
   });

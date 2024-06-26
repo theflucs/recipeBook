@@ -48,11 +48,11 @@ function Home() {
       {isError && <p>Error</p>}
       <div className="bg-gray-100 flex items-center justify-center text-center">
         <div className="px-2 py-4">
-          <h2 id="homepage-title" className="text-xl md:text-2xl">
+          <h2 data-cy="homepage-title" className="text-xl md:text-2xl">
             Welcome to your Recipe Book
           </h2>
           <h3
-            id="homepage-subtitle"
+            data-cy="homepage-subtitle"
             className="text-lg md:text-xl font-semibold text-orange-700"
           >
             Explore our recipes online!
@@ -61,7 +61,7 @@ function Home() {
       </div>
       {data && (
         <input
-          id="search-bar"
+          data-cy="search-bar"
           className="py-2 pl-10 pr-4 mb-4 rounded-lg focus:outline-none focus:bg-white mx-8"
           type="text"
           placeholder="Search..."
@@ -73,7 +73,7 @@ function Home() {
         />
       )}
       <button
-        id="reset-filters-button"
+        data-cy="reset-filters-button"
         onClick={resetFilters}
         className="flex justify-end items-center space-x-2 mr-8"
       >
