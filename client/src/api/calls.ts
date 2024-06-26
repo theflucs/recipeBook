@@ -13,7 +13,7 @@ type RecipesPayload = {
 type GetRecipesAPI = (payload: RecipesPayload) => Promise<Recipe[]>;
 type GetRecipeDetailAPI = (id: string) => Promise<Recipe>;
 type GetRecipeCommentsAPI = (id: string) => Promise<Comment[]>;
-type PostCommentPayload = {
+export type PostCommentPayload = {
     id: string;
     comment: string;
     rating: number;
