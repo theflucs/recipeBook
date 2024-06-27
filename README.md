@@ -166,4 +166,10 @@ To run the tests, use the following command:
 The tests rely on the use of the `data-cy` attribute.
 Be aware of it if you plan to make changes in the `Home` component `jsx`.
 
+## Screenshots app
+
+![Screenshot 2024-06-27 at 11 40 11](https://github.com/theflucs/recipeBook/assets/89919203/ce2be2e7-0aa4-4e9b-bf43-33e6526a7d13)
+
+![Screenshot 2024-06-27 at 11 40 29](https://github.com/theflucs/recipeBook/assets/89919203/8a9194a2-5b9c-48ee-b1b7-ba99e4828513)
+
 ## Happy cooking!
