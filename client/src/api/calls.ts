@@ -98,3 +98,28 @@ export const getDiets: GetOptionsAPI = async () => {
         throw new Error('Failed to fetch diets. Please try again later.');
     }
 };
+
+export type PostNewRecipePayload = {
+    name: string;
+    ingredients: string[];
+    instructions: string;
+    cuisineId: string;
+    dietId: string;
+    difficultyId: string;
+    image: string;
+};
+
+type PostNewRecipeAPI = (formData: FormData) => Promise<void>;
+
+export const postNewRecipe: PostNewRecipeAPI = async (formData) => {
+    try {
+        await axiosInstance.post('/recipes', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+    } catch (error) {
+        console.error('Error posting new recipe:', error);
+        throw new Error('Failed to post new recipe. Please try again later.');
+    }
+};
