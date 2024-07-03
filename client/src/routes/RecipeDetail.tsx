@@ -14,6 +14,7 @@ import {
 } from "../api/calls";
 import CountryFlag from "../components/CountryFlag";
 import { Rating } from "../types/api";
+import Alert from "../components/Alert";
 
 function ReceipeDetail() {
   const { id } = useParams<{ id: string }>();
@@ -74,6 +75,10 @@ function Comments(props: { id: string }) {
   const { id } = props;
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState<Rating>(0);
+  const [alert, setAlert] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const { data, error } = useQuery({
     queryKey: ["comments", id],
@@ -84,8 +89,12 @@ function Comments(props: { id: string }) {
     mutationFn: (newComment: PostRecipeCommentPayload) => {
       return postComment(newComment);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["comments", id] });
+    onSuccess: (data) => {
+      setAlert({
+        type: "success",
+        message: "Your comment was posted successfully!",
+      });
+      queryClient.invalidateQueries({ queryKey: ["comments", data.id] });
     },
   });
 
@@ -134,6 +143,13 @@ function Comments(props: { id: string }) {
       </div>
 
       <div>
+        {alert && (
+          <Alert
+            message={alert.message}
+            type={alert.type}
+            onClose={() => setAlert(null)}
+          />
+        )}
         <h2 className="text-xl font-bold mb-4">Add a comment</h2>
         <Ratings rating={rating} setRating={setRating} />
         <textarea
@@ -147,7 +163,7 @@ function Comments(props: { id: string }) {
               text-white py-2 px-4 rounded
               ${
                 !comment || !rating
-                  ? "bg-gray-300 cursor-wait"
+                  ? "bg-gray-300"
                   : "bg-amber-400 hover:bg-amber-500"
               }
               `}

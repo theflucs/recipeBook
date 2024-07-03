@@ -56,7 +56,7 @@ export type PostRecipeCommentPayload = {
     date: string;
 };
 
-type PostRecipeCommentAPI = (payload: PostRecipeCommentPayload) => Promise<void>;
+type PostRecipeCommentAPI = (payload: PostRecipeCommentPayload) => Promise<Comment>;
 export const postComment: PostRecipeCommentAPI = async (payload) => {
     const { id, comment, rating, date } = payload;
     try {

@@ -132,7 +132,7 @@ function Home() {
           className={`
             ${
               isFetchingNextPage
-                ? "bg-gray-300 cursor-wait"
+                ? "bg-gray-300"
                 : "bg-orange-500 hover:bg-orange-600 focus:outline-none"
             }
             ${
