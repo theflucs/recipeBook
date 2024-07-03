@@ -4,6 +4,7 @@ import queryClient from "./queryClient";
 import AppLayout from "./components/AppLayout";
 import Home from "./routes/Home";
 import RecipeDetail from "./routes/RecipeDetail";
+import AddNewRecipe from "./routes/AddNewRecipe";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/recipes/:id" element={<RecipeDetail />} />
+            <Route path="/recipes/new" element={<AddNewRecipe />} />
           </Routes>
         </AppLayout>
       </QueryClientProvider>

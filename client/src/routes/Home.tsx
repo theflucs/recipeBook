@@ -8,6 +8,7 @@ import {
 } from "../api/calls";
 import { useState } from "react";
 import RecipeCard from "../components/RecipeCard";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [search, setSearch] = useState("");
@@ -156,7 +157,15 @@ function Home() {
         </button>{" "}
         {!hasNextPage && !isFetchingNextPage && (
           <div className="mt-4">
-            <p className="font-semibold">No more recipes</p>
+            <p className="mb-4 font-semibold text-lg text-center">
+              No more recipes
+            </p>
+            <Link
+              className="p-4 rounded-full text-white text-lg bg-orange-500 hover:bg-orange-600"
+              to="/recipes/new"
+            >
+              Add your own recipe!
+            </Link>
           </div>
         )}
       </div>
