@@ -109,13 +109,13 @@ function Comments(props: { id: string }) {
       rating,
       date: new Date().toISOString(),
     };
-    if (payload.comment && payload.rating) {
-      postCommentMutation.mutate(payload);
-      setRating(0);
-      setComment("");
-    } else {
-      alert("Comment cannot be empty");
-    }
+    postCommentMutation.mutate(payload);
+    resetComment();
+  };
+
+  const resetComment = () => {
+    setComment("");
+    setRating(0);
   };
 
   return (
@@ -143,8 +143,16 @@ function Comments(props: { id: string }) {
         ></textarea>
 
         <button
-          className="bg-amber-400 hover:bg-amber-500 text-white py-2 px-4 rounded"
+          className={`
+              text-white py-2 px-4 rounded
+              ${
+                !comment || !rating
+                  ? "bg-gray-300 cursor-wait"
+                  : "bg-amber-400 hover:bg-amber-500"
+              }
+              `}
           onClick={submitComment}
+          disabled={!comment || !rating}
         >
           Submit
         </button>
