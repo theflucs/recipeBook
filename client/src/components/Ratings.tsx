@@ -1,8 +1,9 @@
+import { Rating } from "../types/api";
 import Star from "./Star";
 
 function Ratings(props: {
-  rating: number;
-  setRating?: (rating: number) => void;
+  rating: Rating;
+  setRating?: (rating: Rating) => void;
 }) {
   const { rating, setRating } = props;
   return (

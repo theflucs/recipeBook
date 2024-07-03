@@ -16,7 +16,7 @@ export type Comment = {
     id: string;
     recipeId: string;
     comment: string;
-    rating: number;
+    rating: Rating;
     date: string;
 };
 
@@ -26,3 +26,4 @@ export type Option = {
     code?: string;
 };
 
+export type Rating = 0 | 1 | 2 | 3 | 4 | 5;

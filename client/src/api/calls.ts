@@ -1,6 +1,5 @@
 import axiosInstance from "./axios";
 import { Comment, Option, Recipe } from "../types/api";
-import { BASE_API_URL } from "./BASE_API_URL";
 
 type RecipesPayload = {
     _page: number;
@@ -11,19 +10,9 @@ type RecipesPayload = {
 };
 
 type GetRecipesAPI = (payload: RecipesPayload) => Promise<Recipe[]>;
-type GetRecipeDetailAPI = (id: string) => Promise<Recipe>;
-type GetRecipeCommentsAPI = (id: string) => Promise<Comment[]>;
-export type PostCommentPayload = {
-    id: string;
-    comment: string;
-    rating: number;
-    date: string;
-};
-type GetOptionsAPI = () => Promise<Option[]>;
-
 export const getRecipes: GetRecipesAPI = async (payload) => {
     try {
-        const response = await axiosInstance.get(`${BASE_API_URL}/recipes`, {
+        const response = await axiosInstance.get(`/recipes`, {
             params: {
                 ...payload,
                 _limit: 6,
@@ -37,9 +26,11 @@ export const getRecipes: GetRecipesAPI = async (payload) => {
     }
 };
 
+
+type GetRecipeDetailAPI = (id: string) => Promise<Recipe>;
 export const getRecipeDetail: GetRecipeDetailAPI = async (id) => {
     try {
-        const response = await axiosInstance.get(`${BASE_API_URL}/recipes/${id}?_expand=cuisine`);
+        const response = await axiosInstance.get(`/recipes/${id}?_expand=cuisine`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching recipe detail for recipe ID ${id}:`, error);
@@ -47,9 +38,10 @@ export const getRecipeDetail: GetRecipeDetailAPI = async (id) => {
     }
 };
 
+type GetRecipeCommentsAPI = (id: string) => Promise<Comment[]>;
 export const getRecipeComments: GetRecipeCommentsAPI = async (id) => {
     try {
-        const response = await axiosInstance.get(`${BASE_API_URL}/recipes/${id}/comments`);
+        const response = await axiosInstance.get(`/recipes/${id}/comments`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching comments for recipe ID ${id}:`, error);
@@ -57,10 +49,18 @@ export const getRecipeComments: GetRecipeCommentsAPI = async (id) => {
     }
 };
 
-export const postComment = async (payload: PostCommentPayload): Promise<void> => {
+export type PostRecipeCommentPayload = {
+    id: string;
+    comment: string;
+    rating: number;
+    date: string;
+};
+
+type PostRecipeCommentAPI = (payload: PostRecipeCommentPayload) => Promise<void>;
+export const postComment: PostRecipeCommentAPI = async (payload) => {
     const { id, comment, rating, date } = payload;
     try {
-        const response = await axiosInstance.post(`${BASE_API_URL}/recipes/${id}/comments`, { comment, rating, date });
+        const response = await axiosInstance.post(`/recipes/${id}/comments`, { comment, rating, date });
         return response.data;
     } catch (error) {
         console.error(`Error posting comment for recipe ID ${id}:`, error);
@@ -68,9 +68,10 @@ export const postComment = async (payload: PostCommentPayload): Promise<void> =>
     }
 };
 
+type GetOptionsAPI = () => Promise<Option[]>;
 export const getCuisines: GetOptionsAPI = async () => {
     try {
-        const response = await axiosInstance.get(`${BASE_API_URL}/cuisines`);
+        const response = await axiosInstance.get(`/cuisines`);
         return response.data;
     } catch (error) {
         console.error('Error fetching cuisines:', error);
@@ -80,7 +81,7 @@ export const getCuisines: GetOptionsAPI = async () => {
 
 export const getDifficulties: GetOptionsAPI = async () => {
     try {
-        const response = await axiosInstance.get(`${BASE_API_URL}/difficulties`);
+        const response = await axiosInstance.get(`/difficulties`);
         return response.data;
     } catch (error) {
         console.error('Error fetching difficulties:', error);
@@ -90,7 +91,7 @@ export const getDifficulties: GetOptionsAPI = async () => {
 
 export const getDiets: GetOptionsAPI = async () => {
     try {
-        const response = await axiosInstance.get(`${BASE_API_URL}/diets`);
+        const response = await axiosInstance.get(`/diets`);
         return response.data;
     } catch (error) {
         console.error('Error fetching diets:', error);

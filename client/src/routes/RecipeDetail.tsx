@@ -7,12 +7,13 @@ import queryClient from "../queryClient";
 import { BASE_API_URL } from "../api/BASE_API_URL";
 import Ratings from "../components/Ratings";
 import {
-  PostCommentPayload,
+  PostRecipeCommentPayload,
   getRecipeComments,
   getRecipeDetail,
   postComment,
 } from "../api/calls";
 import CountryFlag from "../components/CountryFlag";
+import { Rating } from "../types/api";
 
 function ReceipeDetail() {
   const { id } = useParams<{ id: string }>();
@@ -72,7 +73,7 @@ function ReceipeDetail() {
 function Comments(props: { id: string }) {
   const { id } = props;
   const [comment, setComment] = useState("");
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState<Rating>(0);
 
   const { data, error } = useQuery({
     queryKey: ["comments", id],
@@ -80,7 +81,7 @@ function Comments(props: { id: string }) {
   });
 
   const postCommentMutation = useMutation({
-    mutationFn: (newComment: PostCommentPayload) => {
+    mutationFn: (newComment: PostRecipeCommentPayload) => {
       return postComment(newComment);
     },
     onSuccess: () => {
@@ -102,7 +103,7 @@ function Comments(props: { id: string }) {
   };
 
   const submitComment = () => {
-    const payload: PostCommentPayload = {
+    const payload: PostRecipeCommentPayload = {
       id,
       comment,
       rating,
