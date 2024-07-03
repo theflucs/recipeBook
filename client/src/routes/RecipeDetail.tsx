@@ -13,7 +13,7 @@ import {
   postComment,
 } from "../api/calls";
 import CountryFlag from "../components/CountryFlag";
-import { Rating } from "../types/api";
+import { Comment, Rating } from "../types/api";
 import Alert from "../components/Alert";
 
 function ReceipeDetail() {
@@ -89,6 +89,23 @@ function Comments(props: { id: string }) {
     mutationFn: (newComment: PostRecipeCommentPayload) => {
       return postComment(newComment);
     },
+    onMutate: (newComment) => {
+      const data: Comment = {
+        recipeId: newComment.id,
+        id: "temp-id",
+        comment: newComment.comment,
+        rating: newComment.rating as Rating,
+        date: newComment.date,
+      };
+      queryClient.setQueryData(["comments", id], (oldData: Comment[]) => [
+        ...oldData,
+        data,
+      ]);
+      setTimeout(() => {
+        const commentElement = document.getElementById(`comment-${data.id}`);
+        commentElement?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 1000);
+    },
     onSuccess: (data) => {
       setAlert({
         type: "success",
@@ -132,7 +149,11 @@ function Comments(props: { id: string }) {
       <div>
         <h2 className="text-xl font-bold mb-4">Comments</h2>
         {data.map((comment) => (
-          <div className="mb-6 pb-4 border-b" key={comment.id}>
+          <div
+            className="mb-6 pb-4 border-b"
+            key={comment.id}
+            id={`comment-${comment.id}`}
+          >
             <p className="font-bold text-lg mb-2">{comment.comment}</p>
             <Ratings rating={comment.rating} />
             <p className="text-gray-500 mb-2">
