@@ -148,19 +148,26 @@ function Comments(props: { id: string }) {
     <section className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
       <div>
         <h2 className="text-xl font-bold mb-4">Comments</h2>
-        {data.map((comment) => (
-          <div
-            className="mb-6 pb-4 border-b"
-            key={comment.id}
-            id={`comment-${comment.id}`}
-          >
-            <p className="font-bold text-lg mb-2">{comment.comment}</p>
-            <Ratings rating={comment.rating} />
-            <p className="text-gray-500 mb-2">
-              {format(parseISO(comment.date), "dd/MM/yyyy HH:mm")}
-            </p>
-          </div>
-        ))}
+        {data.length > 0 ? (
+          data.map((comment) => (
+            <div
+              className="mb-6 pb-4 border-b"
+              key={comment.id}
+              id={`comment-${comment.id}`}
+            >
+              <p className="font-bold text-lg mb-2">{comment.comment}</p>
+              <Ratings rating={comment.rating} />
+              <p className="text-gray-500 mb-2">
+                {format(parseISO(comment.date), "dd/MM/yyyy HH:mm")}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-600">
+            There are no comments yet.{" "}
+            <span className="font-bold">Leave yours!</span>
+          </p>
+        )}
       </div>
 
       <div>
@@ -171,7 +178,7 @@ function Comments(props: { id: string }) {
             onClose={() => setAlert(null)}
           />
         )}
-        <h2 className="text-xl font-bold mb-4">Add a comment</h2>
+        <h2 className="text-xl font-bold mb-4">Leave a comment</h2>
         <Ratings rating={rating} setRating={setRating} />
         <textarea
           className="w-full h-24 p-2 mb-4 border rounded"
@@ -181,13 +188,13 @@ function Comments(props: { id: string }) {
 
         <button
           className={`
-              text-white py-2 px-4 rounded
-              ${
-                !comment || !rating
-                  ? "bg-gray-300"
-                  : "bg-amber-400 hover:bg-amber-500"
-              }
-              `}
+            text-white py-2 px-4 rounded
+            ${
+              !comment || !rating
+                ? "bg-gray-300"
+                : "bg-amber-400 hover:bg-amber-500"
+            }
+          `}
           onClick={submitComment}
           disabled={!comment || !rating}
         >
