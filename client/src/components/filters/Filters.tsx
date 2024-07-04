@@ -32,33 +32,31 @@ function Filters({
   const { data: diets } = useDietsQuery();
 
   return (
-    <section className="flex flex-col gap-4">
-      <div className="flex gap-4 items-center">
-        <CuisinesFilter
-          cuisines={cuisines || []}
-          selectedCuisineId={cuisineId}
-          onCuisineChange={onCuisineChange}
-        />
-        <DifficultiesFilter
-          difficulties={difficulties || []}
-          selectedDifficultyId={difficultyId}
-          onDifficultyChange={onDifficultyChange}
-        />
-        <DietsFilter
-          diets={diets || []}
-          selectedDietId={dietId}
-          onDietChange={onDietChange}
-        />
-        {(cuisineId || difficultyId || dietId) && (
-          <button
-            onClick={onReset}
-            className="p-2 pl-0 bg-gray-200 text-gray-600 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 flex items-center radius-2"
-          >
-            <XReset />
-            <span className="font-size-sm">Reset Filters</span>
-          </button>
-        )}
-      </div>
+    <section className="flex flex-col sm:flex-row items-center gap-2 w-full max-w-7xl mx-auto">
+      <CuisinesFilter
+        cuisines={cuisines || []}
+        selectedCuisineId={cuisineId}
+        onCuisineChange={onCuisineChange}
+      />
+      <DifficultiesFilter
+        difficulties={difficulties || []}
+        selectedDifficultyId={difficultyId}
+        onDifficultyChange={onDifficultyChange}
+      />
+      <DietsFilter
+        diets={diets || []}
+        selectedDietId={dietId}
+        onDietChange={onDietChange}
+      />
+      {(cuisineId || difficultyId || dietId) && (
+        <button
+          onClick={onReset}
+          className="w-full font-semibold text-lg text-gray-700 flex items-center flex-wrap justify-center"
+        >
+          <XReset />
+          <span className="text-sm ml-2">Reset Filters</span>
+        </button>
+      )}
     </section>
   );
 }

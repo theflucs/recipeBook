@@ -29,7 +29,7 @@ function RecipesList(props: RecipesListProps) {
   }
   return (
     <section className="w-full mt-6">
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {recipes?.map((recipe: Recipe) => (
           <Link to={`/recipes/${recipe.id}`} key={recipe.id}>
             <RecipeCard recipe={recipe} />

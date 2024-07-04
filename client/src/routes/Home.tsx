@@ -45,7 +45,7 @@ function Home() {
   };
 
   return (
-    <div className="container mx-auto flex flex-col p-4 md:p-8">
+    <div className="container mx-auto flex flex-col">
       <div className="bg-gray-100 flex items-center justify-center text-center">
         <div className="px-2 py-4">
           <h2 data-cy="homepage-title" className="text-xl md:text-2xl">
