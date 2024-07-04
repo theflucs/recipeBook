@@ -6,14 +6,15 @@ import {
   useDifficultiesQuery,
   useDietsQuery,
 } from "../hooks/optionsQueries";
+import { Option } from "../types/api";
 
 type FormInputs = {
   name: string;
   ingredients: { value: string }[];
   instructions: string;
-  cuisineId: string;
-  dietId: string;
-  difficultyId: "1" | "2" | "3";
+  cuisineId: Option["id"];
+  dietId: Option["id"];
+  difficultyId: Option["id"];
   image: FileList;
 };
 
