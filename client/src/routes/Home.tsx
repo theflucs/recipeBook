@@ -2,34 +2,16 @@ import { useSearchParams } from "react-router-dom";
 import useRecipesQuery from "../hooks/useRecipesQuery";
 import Filters from "../components/filters/Filters";
 import RecipesList from "../components/RecipesList";
-import SearchBar from "../components/SearchBar";
-import { useState } from "react";
 
 function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [search, setSearch] = useState(searchParams.get("q") || "");
-
+  const search = searchParams.get("q") || "";
   const cuisineId = searchParams.get("cuisineId") || "";
   const difficultyId = searchParams.get("difficultyId") || "";
   const dietId = searchParams.get("dietId") || "";
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useRecipesQuery({ search, cuisineId, difficultyId, dietId });
-
-  const updateSearchParams = (newParams: URLSearchParams) => {
-    setSearchParams(newParams);
-  };
-
-  const handleSearchChange = (value: string) => {
-    const newParams = new URLSearchParams(searchParams);
-    if (value) {
-      newParams.set("q", value);
-    } else {
-      newParams.delete("q");
-    }
-    updateSearchParams(newParams);
-    setSearch(value);
-  };
 
   const handleFilterChange = (filter: string, newFilterId: string) => {
     const newParams = new URLSearchParams(searchParams);
@@ -38,7 +20,7 @@ function Home() {
     } else {
       newParams.delete(filter);
     }
-    updateSearchParams(newParams);
+    setSearchParams(newParams);
   };
 
   const handleCuisineChange = (newCuisineId: string) => {
@@ -54,9 +36,8 @@ function Home() {
   };
 
   const resetFilters = () => {
-    setSearch("");
     const newParams = new URLSearchParams();
-    updateSearchParams(newParams);
+    setSearchParams(newParams);
   };
 
   const handleClick = () => {
@@ -64,7 +45,7 @@ function Home() {
   };
 
   return (
-    <main className="container mx-auto flex flex-col p-4 md:p-8">
+    <div className="container mx-auto flex flex-col p-4 md:p-8">
       <div className="bg-gray-100 flex items-center justify-center text-center">
         <div className="px-2 py-4">
           <h2 data-cy="homepage-title" className="text-xl md:text-2xl">
@@ -81,12 +62,6 @@ function Home() {
 
       {data && (
         <>
-          <SearchBar
-            search={search}
-            onSearchChange={handleSearchChange}
-            onClear={() => handleSearchChange("")}
-          />
-
           <Filters
             cuisineId={cuisineId}
             difficultyId={difficultyId}
@@ -105,7 +80,7 @@ function Home() {
           />
         </>
       )}
-    </main>
+    </div>
   );
 }
 
