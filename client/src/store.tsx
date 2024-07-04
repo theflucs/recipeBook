@@ -10,7 +10,7 @@ export const useStore = create<LangState>()(
   devtools(
     persist(
       (set) => ({
-        lang: "EN",
+        lang: "en",
         setLang: (lang) => set({ lang }),
       }),
       {

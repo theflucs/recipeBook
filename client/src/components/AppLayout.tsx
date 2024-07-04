@@ -3,6 +3,8 @@ import { NavLink, useSearchParams, useNavigate, Link } from "react-router-dom";
 import PlusCircle from "./PlusCircle";
 import SearchBar from "./SearchBar";
 import { useStore } from "../store";
+import { useLingui } from "@lingui/react";
+import { msg } from "@lingui/macro";
 
 function AppLayout({ children }: { children: React.ReactNode }) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,6 +14,8 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 
   const lang = useStore((state) => state.lang);
   const setLang = useStore((state) => state.setLang);
+
+  const { _ } = useLingui();
 
   const handleSearchSubmit = (value: string) => {
     const newParams = new URLSearchParams(searchParams);
@@ -37,7 +41,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       <header className="bg-amber-400 shadow-sm text-white">
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between px-4 py-3 space-y-2 md:space-y-0">
           <Link to="/">
-            <h1 className="text-3xl font-semibold ml-6">Online Recipe Book</h1>
+            <h1 className="text-3xl font-semibold ml-6">
+              {_(msg`Online Recipe Book`)}
+            </h1>
           </Link>
           <SearchBar
             search={search}
@@ -62,8 +68,8 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             onChange={(e) => setLang(e.target.value)}
             className="text-gray-700 block appearance-none bg-white border border-gray-300 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
           >
-            <option value="EN">English</option>
-            <option value="IT">Italian</option>
+            <option value="en">English</option>
+            <option value="it">Italian</option>
           </select>
         </div>
       </header>
