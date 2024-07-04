@@ -109,15 +109,16 @@ export type PostNewRecipePayload = {
     image: string;
 };
 
-type PostNewRecipeAPI = (formData: FormData) => Promise<void>;
+type PostNewRecipeAPI = (formData: FormData) => Promise<Recipe>;
 
 export const postNewRecipe: PostNewRecipeAPI = async (formData) => {
     try {
-        await axiosInstance.post('/recipes', formData, {
+        const response = await axiosInstance.post('/recipes', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         });
+        return response.data;
     } catch (error) {
         console.error('Error posting new recipe:', error);
         throw new Error('Failed to post new recipe. Please try again later.');

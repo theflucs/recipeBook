@@ -63,7 +63,7 @@ function Home() {
       {data && (
         <input
           data-cy="search-bar"
-          className="py-2 pl-10 pr-4 mb-4 rounded-lg focus:outline-none focus:bg-white mx-8"
+          className="py-2 pl-10 pr-4 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 mx-8"
           type="text"
           placeholder="Search..."
           onChange={(e) => {
@@ -71,6 +71,7 @@ function Home() {
             setSearch(e.target.value);
           }}
           value={search}
+          autoFocus
         />
       )}
       <button

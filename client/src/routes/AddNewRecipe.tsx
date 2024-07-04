@@ -7,6 +7,9 @@ import {
   useDietsQuery,
 } from "../hooks/optionsQueries";
 import { Option } from "../types/api";
+import { useEffect, useRef, useState } from "react";
+import Alert from "../components/Alert";
+import { useNavigate } from "react-router";
 
 type FormInputs = {
   name: string;
@@ -23,6 +26,13 @@ function AddNewRecipe() {
   const { data: difficulties, error: difficultiesError } =
     useDifficultiesQuery();
   const { data: diets, error: dietsError } = useDietsQuery();
+  const navigate = useNavigate();
+  const timeoutRef = useRef<number | null>(null);
+
+  const [alert, setAlert] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const {
     register,
@@ -42,7 +52,31 @@ function AddNewRecipe() {
 
   const postNewRecipeMutation = useMutation({
     mutationFn: (formData: FormData) => postNewRecipe(formData),
+    onSuccess: (data) => {
+      setAlert({
+        type: "success",
+        message: "Your recipe was posted successfully!",
+      });
+      timeoutRef.current = window.setTimeout(() => {
+        navigate(`/recipes/${data.id}`);
+      }, 3000);
+    },
+    onError: () => {
+      setAlert({
+        type: "error",
+        message:
+          "There was an error posting your recipe. Please try again or caome back later.",
+      });
+    },
   });
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   function handleIngredients(ingredients: { value: string }[]): string[] {
     return [
@@ -80,6 +114,13 @@ function AddNewRecipe() {
 
   return (
     <div className="p-4 max-w-md mx-auto">
+      {alert && (
+        <Alert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert(null)}
+        />
+      )}
       <h1 className="text-2xl font-bold mb-4">Add New Recipe</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
