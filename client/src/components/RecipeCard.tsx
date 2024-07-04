@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { BASE_API_URL } from "../api/BASE_API_URL";
 import { Recipe } from "../types/api";
 import DifficultyCardBadge from "./DifficultyBadge";
@@ -9,12 +8,12 @@ function RecipeCard(props: { recipe: Recipe }) {
   return (
     <article
       key={id}
-      className="max-w-xs w-full overflow-hidden shadow-lg bg-white flex flex-col justify-between mx-auto mb-4 rounded-b-lg"
+      className="max-w-xs w-full overflow-hidden shadow-lg bg-white flex flex-col justify-between mx-auto mb-4 rounded-lg"
     >
       <div className="w-full h-48 overflow-hidden">
         <img
           loading="lazy"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover rounded-t-lg"
           src={`${BASE_API_URL}${image}`}
           alt={name}
         />
@@ -25,14 +24,6 @@ function RecipeCard(props: { recipe: Recipe }) {
           <CountryFlag cuisine={cuisine} />
           <DifficultyCardBadge difficultyId={difficultyId} />
         </div>
-      </div>
-      <div className="mt-auto">
-        <Link
-          to={`/recipes/${id}`}
-          className="block w-full text-center bg-amber-400 hover:bg-amber-500 text-white py-2 rounded-b-lg"
-        >
-          See Details
-        </Link>
       </div>
     </article>
   );
