@@ -161,8 +161,8 @@ function Comments(props: { id: string }) {
           ))
         ) : (
           <p className="text-gray-600">
-            There are no comments yet.{" "}
-            <span className="font-bold">Leave yours!</span>
+            There are no comments yet.
+            <span className="font-bold"> Leave yours!</span>
           </p>
         )}
       </div>
