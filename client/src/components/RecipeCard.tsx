@@ -1,10 +1,19 @@
 import { BASE_API_URL } from "../api/BASE_API_URL";
-import { Recipe } from "../types/api";
+import { Comment, Rating, Recipe } from "../types/api";
 import DifficultyCardBadge from "./DifficultyBadge";
 import CountryFlag from "./CountryFlag";
+import { useCommentsQuery } from "../hooks/useCommentsQuery";
+import Ratings from "./Ratings";
 
 function RecipeCard(props: { recipe: Recipe }) {
   const { id, name, difficultyId, image, cuisine } = props.recipe;
+  const { data } = useCommentsQuery(id);
+  let averageRating: Rating = 0;
+
+  if (data) {
+    averageRating = calculateAverageRating(data);
+  }
+
   return (
     <article
       key={id}
@@ -18,15 +27,33 @@ function RecipeCard(props: { recipe: Recipe }) {
           alt={name}
         />
       </div>
-      <div className="px-6 py-4 flex flex-col items-center text-center">
-        <div className="font-bold text-xl mb-2">{name}</div>
-        <div className="flex">
+      <div className="mt-4">
+        <h2 className="text-center font-bold text-xl mb-4">{name}</h2>
+        {data && averageRating > 0 && (
+          <div className="flex justify-center">
+            <Ratings rating={averageRating} />
+          </div>
+        )}
+        <div className="flex bg-amber-400 text-white justify-center py-4">
           <CountryFlag cuisine={cuisine} />
           <DifficultyCardBadge difficultyId={difficultyId} />
         </div>
       </div>
     </article>
   );
+}
+
+function calculateAverageRating(comments: Comment[]): Rating {
+  if (comments.length === 0) return 0;
+
+  const totalRating = comments.reduce(
+    (sum, comment) => sum + comment.rating,
+    0
+  );
+  const numberOfComments = comments.length;
+  const averageRating = totalRating / numberOfComments;
+
+  return Math.round(averageRating) as Rating;
 }
 
 export default RecipeCard;
