@@ -17,11 +17,11 @@ import { Comment, Rating } from "../types/api";
 import Alert from "../components/Alert";
 
 function ReceipeDetail() {
-  const { id } = useParams<{ id: string }>();
+  const id = useParams<{ id: string }>().id as string;
 
   const { data, error } = useQuery({
     queryKey: ["recipe", id],
-    queryFn: () => getRecipeDetail(id as string),
+    queryFn: () => getRecipeDetail(id),
   });
 
   if (!data) {

@@ -7,7 +7,7 @@ import Ratings from "./Ratings";
 
 function RecipeCard(props: { recipe: Recipe }) {
   const { id, name, difficultyId, image, cuisine } = props.recipe;
-  const { data } = useCommentsQuery(id);
+  const { data } = useCommentsQuery(id.toString());
   let averageRating: Rating = 0;
 
   if (data) {
