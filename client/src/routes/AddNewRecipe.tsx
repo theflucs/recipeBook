@@ -1,6 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { postNewRecipe } from "../api/calls";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { useForm, useFieldArray, SubmitHandler } from "react-hook-form";
+import {
+  useCuisinesQuery,
+  useDifficultiesQuery,
+  useDietsQuery,
+} from "../hooks/optionsQueries";
 
 type FormInputs = {
   name: string;
@@ -13,6 +18,11 @@ type FormInputs = {
 };
 
 function AddNewRecipe() {
+  const { data: cuisines, error: cuisinesError } = useCuisinesQuery();
+  const { data: difficulties, error: difficultiesError } =
+    useDifficultiesQuery();
+  const { data: diets, error: dietsError } = useDietsQuery();
+
   const {
     register,
     handleSubmit,
@@ -100,7 +110,7 @@ function AddNewRecipe() {
             Ingredients
           </label>
           {fields.map((field, index) => (
-            <div key={field.id} className="flex gap-2 items-center mt-1 b-2">
+            <div key={field.id} className="flex gap-2 items-center mt-1 mb-2">
               <input
                 {...register(`ingredients.${index}.value`, {
                   required:
@@ -135,7 +145,7 @@ function AddNewRecipe() {
           <button
             type="button"
             onClick={() => append({ value: "" })}
-            className="mt-2 px-4 py-2 bg-orange-500 text-white rounded-md"
+            className="mt-2 px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
           >
             Add Ingredient
           </button>
@@ -172,18 +182,24 @@ function AddNewRecipe() {
           >
             Cuisine
           </label>
-          <select
-            id="cuisineId"
-            {...register("cuisineId", { required: "Cuisine is required" })}
-            className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50 ${
-              errors.cuisineId ? "border-red-500" : ""
-            }`}
-          >
-            <option value="">Select Cuisine</option>
-            <option value="1">Italian</option>
-            <option value="2">Mexican</option>
-            <option value="3">Indian</option>
-          </select>
+          {cuisinesError ? (
+            <p className="text-red-500 text-sm mt-1">Failed to load cuisines</p>
+          ) : (
+            <select
+              id="cuisineId"
+              {...register("cuisineId", { required: "Cuisine is required" })}
+              className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50 ${
+                errors.cuisineId ? "border-red-500" : ""
+              }`}
+            >
+              <option value="">Select Cuisine</option>
+              {cuisines?.map((cuisine) => (
+                <option key={cuisine.id} value={cuisine.id}>
+                  {cuisine.name}
+                </option>
+              ))}
+            </select>
+          )}
           {errors.cuisineId && (
             <p className="text-red-500 text-sm mt-1">
               {errors.cuisineId.message}
@@ -198,18 +214,24 @@ function AddNewRecipe() {
           >
             Diet
           </label>
-          <select
-            id="dietId"
-            {...register("dietId", { required: "Diet is required" })}
-            className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50 ${
-              errors.dietId ? "border-red-500" : ""
-            }`}
-          >
-            <option value="">Select Diet</option>
-            <option value="1">Vegetarian</option>
-            <option value="2">Vegan</option>
-            <option value="3">Gluten-Free</option>
-          </select>
+          {dietsError ? (
+            <p className="text-red-500 text-sm mt-1">Failed to load diets</p>
+          ) : (
+            <select
+              id="dietId"
+              {...register("dietId", { required: "Diet is required" })}
+              className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50 ${
+                errors.dietId ? "border-red-500" : ""
+              }`}
+            >
+              <option value="">Select Diet</option>
+              {diets?.map((diet) => (
+                <option key={diet.id} value={diet.id}>
+                  {diet.name}
+                </option>
+              ))}
+            </select>
+          )}
           {errors.dietId && (
             <p className="text-red-500 text-sm mt-1">{errors.dietId.message}</p>
           )}
@@ -222,20 +244,28 @@ function AddNewRecipe() {
           >
             Difficulty
           </label>
-          <select
-            id="difficultyId"
-            {...register("difficultyId", {
-              required: "Difficulty is required",
-            })}
-            className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50 ${
-              errors.difficultyId ? "border-red-500" : ""
-            }`}
-          >
-            <option value="">Select Difficulty</option>
-            <option value="1">Easy</option>
-            <option value="2">Medium</option>
-            <option value="3">Hard</option>
-          </select>
+          {difficultiesError ? (
+            <p className="text-red-500 text-sm mt-1">
+              Failed to load difficulties
+            </p>
+          ) : (
+            <select
+              id="difficultyId"
+              {...register("difficultyId", {
+                required: "Difficulty is required",
+              })}
+              className={`mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50 ${
+                errors.difficultyId ? "border-red-500" : ""
+              }`}
+            >
+              <option value="">Select Difficulty</option>
+              {difficulties?.map((difficulty) => (
+                <option key={difficulty.id} value={difficulty.id}>
+                  {difficulty.name}
+                </option>
+              ))}
+            </select>
+          )}
           {errors.difficultyId && (
             <p className="text-red-500 text-sm mt-1">
               {errors.difficultyId.message}
