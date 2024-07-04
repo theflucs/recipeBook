@@ -22,6 +22,7 @@ function ReceipeDetail() {
   const { data, error } = useQuery({
     queryKey: ["recipe", id],
     queryFn: () => getRecipeDetail(id),
+    staleTime: 1000 * 60 * 5,
   });
 
   if (!data) {

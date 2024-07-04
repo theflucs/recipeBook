@@ -29,6 +29,7 @@ const useRecipesQuery = (props: UseRecipiesProps) => {
       }
       return allPages.length + 1;
     },
+    staleTime: 1000 * 60 * 10, // 10 minutes
   });
 };
 
