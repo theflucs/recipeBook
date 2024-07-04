@@ -8,13 +8,13 @@ import { BASE_API_URL } from "../api/BASE_API_URL";
 import Ratings from "../components/Ratings";
 import {
   PostRecipeCommentPayload,
-  getRecipeComments,
   getRecipeDetail,
   postComment,
 } from "../api/calls";
 import CountryFlag from "../components/CountryFlag";
 import { Comment, Rating } from "../types/api";
 import Alert from "../components/Alert";
+import { useCommentsQuery } from "../hooks/useCommentsQuery";
 
 function ReceipeDetail() {
   const id = useParams<{ id: string }>().id as string;
@@ -80,10 +80,7 @@ function Comments(props: { id: string }) {
     message: string;
   } | null>(null);
 
-  const { data, error } = useQuery({
-    queryKey: ["comments", id],
-    queryFn: () => getRecipeComments(id as string),
-  });
+  const { data, error } = useCommentsQuery(id);
 
   const postCommentMutation = useMutation({
     mutationFn: (newComment: PostRecipeCommentPayload) => {
