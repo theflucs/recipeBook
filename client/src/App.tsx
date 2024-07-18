@@ -5,16 +5,31 @@ import AppLayout from "./components/AppLayout";
 import Home from "./routes/Home";
 import RecipeDetail from "./routes/RecipeDetail";
 import AddNewRecipe from "./routes/AddNewRecipe";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { i18n } from "@lingui/core";
 import { useStore } from "./store";
 import { I18nProvider } from "@lingui/react";
+import Spinner from "./components/Spinner";
+
+async function dynamicActivate(locale: string) {
+  const { messages } = await import(`./locales/${locale}.po`);
+  i18n.load(locale, messages);
+  i18n.activate(locale);
+}
 
 function App() {
   const lang = useStore((state) => state.lang);
+  const [localeLoaded, setLocaleLoaded] = useState(false);
+
   useEffect(() => {
-    dynamicActivate(lang);
-  });
+    dynamicActivate(lang).then(() => {
+      setLocaleLoaded(true);
+    });
+  }, [lang]);
+
+  if (!localeLoaded) {
+    return <Spinner />;
+  }
 
   return (
     <BrowserRouter>
@@ -31,12 +46,6 @@ function App() {
       </QueryClientProvider>
     </BrowserRouter>
   );
-}
-export async function dynamicActivate(locale: string) {
-  const { messages } = await import(`./locales/${locale}.po`);
-
-  i18n.load(locale, messages);
-  i18n.activate(locale);
 }
 
 export default App;
